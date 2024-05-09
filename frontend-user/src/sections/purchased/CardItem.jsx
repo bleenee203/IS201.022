@@ -28,19 +28,20 @@ const CardItem = ({ item }) => {
         <Divider orientation="horizontal" />
         <List>
           {
-            JSON.parse(item?.data).map(item =>
-              <ListItem sx={{ gap:2 }} key={item.Name}>
+            (item?.data).map(item =>
+            //JSON.parse(item?.data).map(item =>
+              <ListItem sx={{ gap:2 }} key={item.name}>
                 <ListItemAvatar>
-                  <img src={item?.Images[0]} alt="img-order"
+                  <img src={item?.images[0]} alt="img-order"
                     height="100px" width="100px" style={{ objectFit:"cover" }}
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={item?.Name}
+                  primary={item?.name}
                 />
                 <Typography variant="subtitle1">
-                  {item?.Quantity} x {" "}
-                  {valueLabelFormat(item?.Price)}
+                  {item?.quantity} x {" "}
+                  {valueLabelFormat(item?.price)}
                 </Typography>
               </ListItem>
             )

@@ -17,7 +17,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import QuanityInput from "./quantity/QuantityInput";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteItem } from "../redux/features/cartSlice";
+import { deleteItem, increase } from "../redux/features/cartSlice";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -45,7 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const TableCart = ({ cartItems }) => {
   const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
-
+  console.log(cartItems);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -62,10 +62,10 @@ const TableCart = ({ cartItems }) => {
           {cartItems?.map((item) => (
             <StyledTableRow key={item.id}>
               <StyledTableCell component="th" scope="row">
-                <Card sx={{ display: "flex", bgcolor:"inherit", boxShadow:"none" }}>
+                <Card sx={{ display: "flex", bgcolor: "inherit", boxShadow: "none" }}>
                   <CardMedia
                     component="img"
-                    sx={{ width: 80, height:80 }}
+                    sx={{ width: 80, height: 80 }}
                     image={item?.Images[0]}
                     alt="image"
                   />
@@ -79,11 +79,17 @@ const TableCart = ({ cartItems }) => {
                 </Card>
               </StyledTableCell>
               <StyledTableCell align="right">{valueLabelFormat(item?.Price)}</StyledTableCell>
-              <StyledTableCell align="center"><QuanityInput max={item?.stock || item?.Quantity} qty={item?.Quantity} setQty={setQty}/></StyledTableCell>
-              <StyledTableCell align="right">{valueLabelFormat(item?.Price*item?.Quantity)}</StyledTableCell>
+  
+              {/* <StyledTableCell align="right">
+                <IconButton>
+                  <ClearIcon onClick={() => dispatch(increase({ id: item.id,type:item.type }))} />
+                </IconButton>
+              </StyledTableCell> */}
+              <StyledTableCell align="center"><QuanityInput max={item?.stock || item?.Quantity} qty={item?.Quantity} setQty={setQty} /></StyledTableCell>
+              <StyledTableCell align="right">{valueLabelFormat(item?.Price * item?.Quantity)}</StyledTableCell>
               <StyledTableCell align="right">
                 <IconButton>
-                  <ClearIcon onClick={() => dispatch(deleteItem({ id:item.id, type: item.type }))}/>
+                  <ClearIcon onClick={() => dispatch(deleteItem({ id: item.id, type: item.type }))} />
                 </IconButton>
               </StyledTableCell>
             </StyledTableRow>

@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
+const NumberInput = React.forwardRef(function CustomNumberInput(props, ref ) {
   return (
     <BaseNumberInput
       onChange={(event, newValue) => {
@@ -20,7 +20,7 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
       slotProps={{
         incrementButton: {
           children: <AddIcon fontSize="small" />,
-          className: "increment"
+          className: "increment",
         },
         decrementButton: {
           children: <RemoveIcon fontSize="small" />
@@ -32,7 +32,7 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
   );
 });
 
-export default function QuantityInput({ max, setQty, qty }) {
+export default function QuantityInput({ max, setQty, qty}) {
   return <NumberInput aria-label="Quantity Input" min={1} max={max}
     setQty={setQty} qty={qty}
   />;

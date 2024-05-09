@@ -41,7 +41,7 @@ namespace PetShop.Controllers
 
         // PUT: api/DogItems/update-dog-item/5 update thông tin chú chó có id = {id}
         [HttpPut("update-dog-item/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDogItem([FromRoute]int id, DogItemDto request)
         {
             return await _dogitemservice.UpdateDogItem(id, request);
@@ -49,7 +49,7 @@ namespace PetShop.Controllers
 
         // POST: api/DogItems/add-dog Thêm chó
         [HttpPost("add-dog")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddDogItem([FromBody]DogItemDto request)
         {
             return await _dogitemservice.AddDogItem(request);
@@ -57,7 +57,7 @@ namespace PetShop.Controllers
 
         // DELETE: api/DogItems/5 Xóa 1 chú chó
         [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDogItem([FromRoute] int id)
         {
             return await _dogitemservice.DeleteDogItem(id);
@@ -79,7 +79,7 @@ namespace PetShop.Controllers
         //GET: api/DogItems/get-all-dog Lay danh sach chó danh cho admin
         [HttpGet]
         [Route("get-all-admin")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllDogItemAdmin()
         {
             return await _dogitemservice.GetAllDogItemsAdmin();
@@ -87,7 +87,7 @@ namespace PetShop.Controllers
 
         // GET: api/DogItems/get-dog/5 Lay thong tin chu cho có id = {id}
         [HttpGet("get-dog-admin/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetDogItemAdmin([FromRoute] int id)
         {
             return await _dogitemservice.GetDogItemAdmin(id);

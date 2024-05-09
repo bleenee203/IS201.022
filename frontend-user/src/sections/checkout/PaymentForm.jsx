@@ -26,7 +26,7 @@ export default function PaymentForm() {
       email: shipInfo?.email,
       address: `${shipInfo.address}, ${shipInfo.state}, ${shipInfo.city}`,
       total: totalAmount,
-      payment: "chưa thanh toán",
+      payment: "Chưa thanh toán",
       status: "Đang lấy hàng",
       data: cartItems,
       phoneNumber: shipInfo?.phone,

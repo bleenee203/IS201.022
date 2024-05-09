@@ -108,6 +108,7 @@ const PurchasedDetail = () => {
   const steps = ["Đang lấy hàng", "Đang giao", "Thành công"];
   const [item, setItem] = useState();
   const [data, setData] = useState([]);
+  console.log(item);
 
   useEffect(() => {
     const get = async () => {
@@ -180,6 +181,10 @@ const PurchasedDetail = () => {
                     {item?.email}
                   </Typography>}
                   />
+                  <ListItemText sx={{ display:"flex", alignItems:"center", gap: 2 }} primary="Hình thức thanh toán:" secondary={<Typography>
+                    {item?.payment}
+                  </Typography>}
+                  />
                 </Stack>
               }
 
@@ -192,7 +197,7 @@ const PurchasedDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  {item?.created_at !== item?.updated_at && item && new Date(item?.updated_at).toISOString().replace("T", " ").replace(/\.\d{3}Z/, "")}
+                  {item?.createAt !== item?.updateAt && item && new Date(item?.updateAt).toLocaleDateString()}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                   <TimelineDot color={item?.status === "Thành công" ? "success" : "grey"} >
@@ -209,10 +214,10 @@ const PurchasedDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  {item?.created_at !== item?.updated_at && item && new Date(item?.updated_at).toISOString().replace("T", " ").replace(/\.\d{3}Z/, "")}
+                  {item?.createAt !== item?.updateAt && item && new Date(item?.updateAt).toLocaleDateString()}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
-                  <TimelineDot color={item?.created_at !== item?.updated_at ? "success" : "grey"} >
+                  <TimelineDot color={item?.createAt !== item?.updateAt ? "success" : "grey"} >
                     <LocalShippingIcon fontSize="small"/>
                   </TimelineDot>
                   <TimelineConnector />
@@ -226,7 +231,7 @@ const PurchasedDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  {item && new Date(item?.created_at).toISOString().replace("T", " ").replace(/\.\d{3}Z/, "")}
+                  {item && new Date(item?.createAt).toLocaleDateString()}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                   <TimelineDot color="success" >
@@ -243,7 +248,7 @@ const PurchasedDetail = () => {
                   variant="body2"
                   color="text.secondary"
                 >
-                  {item && new Date(item?.created_at).toISOString().replace("T", " ").replace(/\.\d{3}Z/, "")}
+                  {item && new Date(item?.createAt).toLocaleDateString()}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                   <TimelineDot sx={{ m: "auto 0" }} color="success">
@@ -258,18 +263,18 @@ const PurchasedDetail = () => {
           <List>
             {
               data?.map(item =>
-                <ListItem sx={{ gap:2 }} key={item.Name}>
+                <ListItem sx={{ gap:2 }} key={item.name}>
                   <ListItemAvatar>
-                    <img src={item?.Images[0]} alt="img-order"
+                    <img src={item?.images[0]} alt="img-order"
                       height="100px" width="100px" style={{ objectFit:"cover" }}
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={item?.Name}
+                    primary={item?.name}
                   />
                   <Typography variant="subtitle1">
-                    {item?.Quantity} x {" "}
-                    {valueLabelFormat(item?.Price)}
+                    {item?.quantity} x {" "}
+                    {valueLabelFormat(item?.price)}
                   </Typography>
                 </ListItem>
               )

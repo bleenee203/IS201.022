@@ -1,9 +1,9 @@
 import privateClient from "../client/private.client.js";
 
 const checkoutEndpoint = {
-  checkout: `checkout`,
-  getByUser: ({ user_id }) => `checkout/list/${user_id}`,
-  getDetail: ({ id }) => `checkout/detail/${id}`,
+  checkout: `Checkout/checkout`,
+  getByUser: ({ user_id }) => `Checkout/list/${user_id}`,
+  getDetail: ({ id }) => `Checkout/detail/${id}`,
   vnpay: `checkout/vnpay`
 };
 

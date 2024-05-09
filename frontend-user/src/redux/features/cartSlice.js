@@ -74,7 +74,7 @@ const cartSlice = createSlice({
 
     },
     increase: (state, action) => {
-      const id = action.payload;
+      const {id,type} = action.payload;
       state.totalQuantity += 1;
       const selectedItem = state.cartItems?.find((item) => item.id === id);
       // If needed, add condition: quantity lower than stock remain
