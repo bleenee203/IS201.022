@@ -18,13 +18,13 @@ const main = [
     state: "home"
   },
   {
-    display: "Chó cảnh",
+    display: "Thú cưng",
     path: "/dog",
     icon: <CategoryIcon />,
     state: "dog"
   },
   {
-    display: "Đồ cho chó",
+    display: "Sản phẩm cho thú cưng",
     path: "/product",
     icon: <NorthEastIcon />,
     state: "product"
@@ -68,12 +68,12 @@ const user = [
     icon: <PetsIcon />,
     state: "Profile Pet"
   },
-  // {
-  //   display: "Đăng ký khám thú cưng",
-  //   path: "/booking",
-  //   icon: <BookOnlineIcon />,
-  //   state: "booking"
-  // },
+  {
+    display: "Đăng ký khám thú cưng",
+    path: "/booking",
+    icon: <BookOnlineIcon />,
+    state: "booking"
+  },
   // {
   //   display: "password update",
   //   path: "/password-update",

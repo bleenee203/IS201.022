@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\Controllers",
+    "\\backend\\DTOs",
+    "\\backend\\Helpers",
+    "\\backend\\Migrations",
+    "\\backend\\Models",
+    "\\backend\\Services",
+    "\\backend\\Services\\CheckoutService"
+  ],
+  "SelectedNode": "\\backend\\PetShop.sln",
+  "PreviewInSolutionExplorer": false
+}

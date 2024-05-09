@@ -44,7 +44,6 @@ namespace PetShop.Controllers
             return await _appointmentService.GetAll();
         }
 
-
         [HttpPut("updateStatus/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, Appointment1Dto request)

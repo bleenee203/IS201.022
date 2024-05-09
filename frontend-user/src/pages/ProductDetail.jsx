@@ -36,7 +36,6 @@ const reviewList = [
     content: "Sản phẩm này chất lượng lắm <3"
   }
 ];
-
 const ProductDetail = () => {
   const { id } = useParams();
   const [animal, setAnimal] = useState(null);
@@ -67,8 +66,8 @@ const ProductDetail = () => {
     window.scrollTo({ top: 0, behavior:"smooth" });
     getDogDetail();
   }, [getDogDetail]);
-  const exist = cartItems?.find(item => item.dogProductItemId && item.type === "product");
-
+  const exist = cartItems?.find(item => item.id && item.type === "product");
+  
 
   // tong: 5
   // dang có: 1
@@ -82,20 +81,41 @@ const ProductDetail = () => {
       toast.error("Bạn phải đăng nhập để thực hiện chức năng này!");
     }
     else {
-      if (qty > exist?.stock - exist?.quantity) {
-        toast.error("Sản phẩm vượt quá số lượng đang có!");
-        return;
+      console.log("lại là in ra ",qty);
+      console.log(exist);
+      console.log(animal);
+      if(exist!=null){
+        if(qty + exist?.Quantity >animal?.quantity){
+          toast.error("Sản phẩm vượt quá số lượng đang có!");
+          return;
+        }
+        dispatch(addItem({
+          id: animal?.dogProductItemId,
+          Quantity: qty,
+          Price: animal?.price,
+          Images: animal?.images,
+          ItemName: animal?.itemName,
+          type: "product",
+          stock: animal?.quantity
+        }));
+        toast.success("Thêm vào giỏ hàng thành công!");
+      }else{
+        if(qty >animal?.quantity){
+          toast.error("Sản phẩm vượt quá số lượng đang có!");
+          return;
+        }
+        dispatch(addItem({
+          id: animal?.dogProductItemId,
+          Quantity: qty,
+          Price: animal?.price,
+          Images: animal?.images,
+          ItemName: animal?.itemName,
+          type: "product",
+          stock: animal?.quantity
+        }));
+        toast.success("Thêm vào giỏ hàng thành công!");
       }
-      dispatch(addItem({
-        id: animal?.dogProductItemId,
-        Quantity: qty,
-        Price: animal?.price,
-        Images: animal?.images,
-        ItemName: animal?.itemName,
-        type: "product",
-        stock: animal?.quantity
-      }));
-      toast.success("Thêm vào giỏ hàng thành công!");
+      
     }
   };
 
@@ -176,7 +196,6 @@ const ProductDetail = () => {
                 <Box>
                   <QuantityInput max={animal?.Quantity} setQty={setQty} qty={qty}/>
                 </Box>
-                <Typography fontSize="14px">{animal?.quantity} sản phẩm có sẵn</Typography>
               </Stack>
               <Box marginTop="40px !important">
                 {
@@ -204,6 +223,8 @@ const ProductDetail = () => {
               animal?.description
             }
           </Typography>
+          <Typography fontSize="14px">{animal?.quantity} sản phẩm có sẵn</Typography>
+
         </Box>
         {/* des */}
         {/* review */}
@@ -216,5 +237,6 @@ const ProductDetail = () => {
     </Helmet>
   );
 };
+
 
 export default ProductDetail;

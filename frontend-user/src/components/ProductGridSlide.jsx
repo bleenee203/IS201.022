@@ -2,7 +2,7 @@ import { SwiperSlide } from "swiper/react";
 import NavigationSwiper from "./NavigationSwiper";
 import { products } from "../assets/data";
 import BredItem from "./BredItem";
-
+console.log(products);
 const ComicGrid = () => {
   return (
     <NavigationSwiper>
