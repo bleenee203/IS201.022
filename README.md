@@ -17,7 +17,7 @@ Có thể test các api bằng Postman hoặc Swagger
 Chạy lệnh npm run dev
 
 **Chú ý
-- Tạm thời chức năng đăng ký đang có bug => tạo tài khoản user và admin bằng back-end(không nên tạo trong database) và đăng nhập bình thường
-- Tài khoản admin sau khi tạo một thời gian sẽ bị block => có lỗi CORS => tạo lại tài khoản(đang kiếm cách fix :)))) )
-- Một số chức năng user-manager đang có bug...
+- Tạm thời chức năng đăng ký đang có bug => tạo tài khoản user và admin bằng back-end(không nên tạo trong database) và đăng nhập bình thường [đã fix]
+- Tài khoản admin sau khi tạo một thời gian sẽ bị block => có lỗi CORS => tạo lại tài khoản(đang kiếm cách fix :)))) ) [đã fix]
+- Một số chức năng user-manager đang có bug... [đã fix]
  
