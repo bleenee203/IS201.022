@@ -55,12 +55,14 @@ export default function SignupPage() {
   } = useForm({ resolver: zodResolver(SignUpSchema) });
 
   const onHandleSubmit = async (data) => {
+    console.log(data);
     setErrorMessage(undefined);
     setIsLoginRequest(true);
     const { response, err } = await userApi.signup(data);
     setIsLoginRequest(false);
     if (response) {
       toast.success("Đăng ký tài khoản thành công mời bạn đăng nhập!");
+      navigate('/verify', { state: { email: data.email } });
     }
     if (err) {
       setErrorMessage(err.message);

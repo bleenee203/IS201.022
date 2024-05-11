@@ -1,12 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using PetShop.Data;
+using PetShop.DTOs;
 using PetShop.Helpers;
 using PetShop.Models;
 using PetShop.Services.EmailService;
@@ -20,14 +22,17 @@ namespace PetShop.Services.UserService
         private readonly IConfiguration _configuration;
         private readonly PetShopDbContext _context;
         private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
 
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, PetShopDbContext context, IEmailService emailService)
+
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, PetShopDbContext context, IEmailService emailService,IMapper mapper)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
             _context = context;
             _emailService = emailService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordModel model, string userEmail)
@@ -40,7 +45,7 @@ namespace PetShop.Services.UserService
             var resetPasswordResult = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             if (!resetPasswordResult.Succeeded)
             {
-                return ResponseHelper.BadRequest("change pw fail. pls check password");
+                return ResponseHelper.BadRequest("Đổi mật khẩu thất bại. Vui lòng kiểm tra lại mật khẩu hiện tại!");
 
             }
             return ResponseHelper.Ok(new
@@ -121,7 +126,52 @@ namespace PetShop.Services.UserService
             }
             return ResponseHelper.Unauthorized();
         }
+        public async Task<IActionResult> LoginAsyncAdmin(LoginModel model)
+        {
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
+                if (!isAdmin)
+                {
+                    return ResponseHelper.Unauthorized();
+                }
+                if (user.VerifiedAt is null)
+                {
+                    return ResponseHelper.BadRequest("Email not verified!");
+                }
 
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                };
+
+                foreach (var userRole in userRoles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
+                var token = GetToken(authClaims);
+
+                var data = new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo,
+                    id = user.Id,
+                    email = user.Email,
+                    username = user.UserName,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    phoneNumber = user.PhoneNumber,
+                };
+                return ResponseHelper.Ok(data);
+            }
+            return ResponseHelper.Unauthorized();
+        }
         public async Task<IActionResult> RegisterAsync(RegisterModel model)
         {
             var userExists = await userManager.FindByEmailAsync(model.Email) ?? await userManager.FindByNameAsync(model.Username);
@@ -302,9 +352,47 @@ namespace PetShop.Services.UserService
                 firstName = user.FirstName,
                 lastName = user.LastName,
                 phoneNumber = user.PhoneNumber,
-            });
+                createdAt = user.CreatedAt
+            }) ;
         }
+        public async Task<IActionResult> Update(string userEmail, UserDto request)
+        {
+            var user = await userManager.FindByEmailAsync(userEmail);
+            var existsUsername = await userManager.Users.FirstOrDefaultAsync(e =>
+            e.UserName.ToLower() == request.UserName.ToLower()&&e.Email!=userEmail);
+            if (existsUsername is not null) return ResponseHelper.BadRequest("Username đã tồn tại!");
+            if (user != null)
+            {
+                DateTime currentDateTime = DateTime.Now;
+                try
+                {
+                    //_mapper.Map(request, user);
+                    user.UserName = request.UserName;
+                    user.FirstName= request.FirstName;
+                    user.LastName = request.LastName;
+                    user.PhoneNumber= request.PhoneNumber;
+                    user.UpdatedAt= DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return ResponseHelper.BadRequest("Không thể cập nhật. Vui lòng thử lại");
+                }
 
+            }
+
+            return ResponseHelper.Ok(new
+            {
+                user.UserName,
+                user.Email,
+                user.FirstName, 
+                user.LastName,
+                user.PhoneNumber,
+                user.CreatedAt,
+            }
+            );
+
+        }
         public async Task<IActionResult> GetAll()
         {
             var users = await _context.Users.ToListAsync();

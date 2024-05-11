@@ -51,6 +51,7 @@ const ProductDetail = () => {
       const { response, err } = await itemApi.getItemDetail({ id });
       if (response) {
         setAnimal(response);
+        console.log(response)
       }
       if (err) {
         toast.error(err);

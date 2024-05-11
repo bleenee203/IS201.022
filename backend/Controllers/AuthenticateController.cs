@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using PetShop.DTOs;
 using PetShop.Helpers;
 using PetShop.Models;
 using PetShop.Services.UserService;
@@ -25,6 +27,13 @@ namespace PetShop.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             return await _userService.LoginAsync(model);
+        }
+
+        [HttpPost]
+        [Route("login-admin")]
+        public async Task<IActionResult> LoginAmin([FromBody] LoginModel model)
+        {
+            return await _userService.LoginAsyncAdmin(model);
         }
 
         [HttpPost]
@@ -113,7 +122,33 @@ namespace PetShop.Controllers
             }
             return ResponseHelper.Error();
         }
+        [Authorize]
+        [HttpPut("update-info-user")]
+        public async Task<IActionResult> Update(UserDto request)
+        {
+            string authHeader = HttpContext.Request.Headers["Authorization"];
+            if (authHeader != null && authHeader.StartsWith("Bearer "))
+            {
+                string token = authHeader.Substring("Bearer ".Length).Trim();
 
+                // Sử dụng JwtSecurityTokenHandler để đọc token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenObj = tokenHandler.ReadJwtToken(token);
+
+                // Lấy các claim từ token
+                var claims = tokenObj.Claims;
+
+                // Ví dụ: Lấy giá trị claim "sub" (Subject)
+                var subClaim = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email);
+                if (subClaim != null)
+                {
+                    string userEmail = subClaim.Value;
+                    // Sử dụng giá trị subject ở đây
+                    return await _userService.Update(userEmail,request);
+                }
+            }
+            return ResponseHelper.Error();
+        }
         [Authorize(Roles ="Admin")]
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()

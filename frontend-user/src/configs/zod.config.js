@@ -12,16 +12,16 @@ const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 const usernameRegex = new RegExp(/^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/);
-
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 export const SignUpSchema = z
   .object({
-    username:z.string().min(3, "Username tối hiểu 3 ký tự").regex(usernameRegex, "Kiểm tra lại username"),
+    username:z.string().min(3, "Username tối thiểu 3 ký tự").regex(usernameRegex, "Kiểm tra lại username"),
     firstName: z.string().min(1, { message: "Nhập họ của bạn" }),
     lastName: z.string().min(1, { message: "Nhập tên của bạn" }),
     email: z.string().email("Yêu cầu là email. Ví dụ: example@gmail.com").min(1, "Yêu cầu là email. Ví dụ: example@gmail.com"),
-    password: z
-      .string()
-      .min(3, { message: "Mật khẩu phải có nhiều hơn 3 ký tự" }),
+    password: z.string()
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
     confirmPassword: z
       .string()
       .min(1, { message: "Nhập lại mật khẩu" }),
@@ -67,12 +67,12 @@ export const ShippingSchema = z.object({
 });
 
 export const ChangePasswordSchema = z.object({
-  old_password: z
-    .string()
-    .min(3, { message: "Mật khẩu phải có nhiều hơn 3 ký tự" }),
-  new_password: z
-    .string()
-    .min(3, { message: "Mật khẩu phải có nhiều hơn 3 ký tự" }),
+  old_password: z.string()
+  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
+  new_password: z.string()
+  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
   confirmNewPassword: z
     .string()
     .min(1, { message: "Nhập lại mật khẩu" })
@@ -80,7 +80,14 @@ export const ChangePasswordSchema = z.object({
   path: ["confirmNewPassword"],
   message: "Mật khẩu chưa trùng khớp"
 });
-
+export const UpdateUserSchema = z.object({
+  username: z.string().min(3, "Username tối thiểu 3 ký tự").regex(usernameRegex, "Kiểm tra lại username"),
+  firstname: z.string()
+  .min(1, "Nhập họ của bạn"),
+  lastname: z.string()
+  .min(1, "Nhập tên của bạn"),
+  phoneNumber: z.string().min(10, "Số điện thoại tối thiểu là 10 số").max(14, "Số điện thoại tối đa là 14 số").regex(phoneRegex, "Phải là số điện thoại")
+});
 export const bookingSchema = z
   .object({
     user_name:z.string().min(3, "tối hiểu 3 ký tự"),

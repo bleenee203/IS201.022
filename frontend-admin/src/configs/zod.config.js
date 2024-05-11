@@ -1,16 +1,21 @@
 import { z } from "zod";
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 export const SignInSchema = z.object({
   email: z.string().email("Yêu cầu là email. Ví dụ: example@gmail.com").min(1, "Yêu cầu là email. Ví dụ: example@gmail.com"),
   password: z.string()
-    .min(1, "Nhập mật khẩu của bạn")
-    .min(3, "Mật khẩu phải có nhiều hơn 3 ký tự")
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
 });
 
 
 export const ChangePasswordSchema = z.object({
-  password: z.string().min(3, "Mật khẩu phải nhiều hơn 3 ký tự"),
-  newPassword: z.string().min(3, "Mật khẩu phải nhiều hơn 3 ký tự"),
+  password: z.string()
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
+  newPassword: z.string()
+  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
   confirmNewPassword:z.string().min(3, "Mật khẩu phải nhiều hơn 3 ký tự")
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
   message: "Mật khẩu xác nhận chưa trùng khớp!",

@@ -1,5 +1,6 @@
 import publicClient from "../client/public.client.js";
 import privateClient from "../client/private.client.js";
+import { toast } from "react-toastify";
 
 
 const userEndpoints = {
@@ -9,7 +10,8 @@ const userEndpoints = {
   changePassword: "Authenticate/change-password",
   forgotPassword: ({ email }) => `Authenticate/forgot-password?email=${email}`,
   resetPassword: "Authenticate/reset-password",
-  getInfo: "Authenticate/info"
+  getInfo: "Authenticate/info",
+  updateInfo: "Authenticate/update-info-user"
 };
 
 const userApi = {
@@ -20,17 +22,21 @@ const userApi = {
         { email, password }
       );
       return { response };
-    } catch (err) { return { err }; }
+    } catch (err) {      console.log(err);
+      return { err }; }
   },
   signup: async ({ username, email, password, phoneNumber, firstName, lastName }) => {
     try {
       const name = username;
+      console.log(name)
       const response = await publicClient.post(
         userEndpoints.signup,
-        { name, email, password, phoneNumber, firstName, lastName }
+        { username, email, password, phoneNumber, firstName, lastName }
       );
       return { response };
-    } catch (err) { return { err }; }
+    } catch (err) { 
+      console.log(err);
+      return { err }; }
   },
   verify: async ({ token }) => {
     try {
@@ -57,12 +63,12 @@ const userApi = {
       return { response };
     } catch (err) { return { err }; }
   },
-  changePassword: async ({ old_password, new_password, confirmNewPassword }) => {
-    console.log(old_password, new_password, confirmNewPassword);
+  changePassword: async ({ CurrentPassword , NewPassword, ConfirmNewPassword }) => {
+    console.log(CurrentPassword, NewPassword, ConfirmNewPassword);
     try {
       const response = await privateClient.post(
         userEndpoints.changePassword,
-        { old_password, new_password, confirmNewPassword }
+        {ConfirmNewPassword,CurrentPassword, NewPassword }
       );
       return { response };
     } catch (err) {
@@ -75,6 +81,14 @@ const userApi = {
       const response = await privateClient.get(userEndpoints.getInfo);
       return { response };
     } catch (err) { return { err }; }
+  },
+  updateUser: async ({UserName,FirstName,LastName,PhoneNumber}) => {
+    try {
+      const response = await privateClient.put(userEndpoints.updateInfo,{UserName,FirstName,LastName,PhoneNumber});
+      return { response };
+    } catch (err) { 
+      console.log("Error message:", err);
+      return { err }; }
   }
 };
 

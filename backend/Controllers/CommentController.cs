@@ -18,6 +18,7 @@ namespace PetShop.Controllers
 
         [HttpPost("create")]
         [Authorize(Roles = "User,Admin")]
+        //[Authorize]
         public async Task<IActionResult> Create([FromBody] CommentDto request)
         {
             

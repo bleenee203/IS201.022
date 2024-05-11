@@ -18,13 +18,13 @@ const main = [
     state: "home"
   },
   {
-    display: "Thú cưng",
+    display: "Giống chó",
     path: "/dog",
     icon: <CategoryIcon />,
     state: "dog"
   },
   {
-    display: "Sản phẩm cho thú cưng",
+    display: "Sản phẩm cho chó",
     path: "/product",
     icon: <NorthEastIcon />,
     state: "product"

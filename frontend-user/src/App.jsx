@@ -19,6 +19,7 @@ import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import SignupPage from "./pages/SignupPage";
 import ResetPage from "./pages/ResetPage";
+import VerifyPage from "./pages/VerifyPage";
 // import VerifyPage from "./pages/VerifyPage";
 
 const App = () => {
@@ -64,6 +65,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />}/>
           {/* <Route path="/verify" element={<VerifyPage />}/> */}
           <Route path="/reset-password" element={<ResetPage />}/>
+          <Route path="/verify" element={<VerifyPage />} />
         </Routes>
       </BrowserRouter>
     </React.Fragment>

@@ -55,6 +55,7 @@ export default function ProfilePage() {
   };
 
   return (
+    
     <Box
       sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 500 }}
     >
@@ -78,5 +79,6 @@ export default function ProfilePage() {
       <TabPanel value={value} index={1} />
 
     </Box>
+    
   );
 }

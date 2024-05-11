@@ -51,15 +51,16 @@ const ChangePassword = (props) => {
       setOnRequest(true);
       const { response, err } = await userApi.changePassword(
         {
-          old_password: data.old_password,
-          new_password: data.new_password,
-          confirmNewPassword: data.confirmNewPassword
+          CurrentPassword: data.old_password,
+          NewPassword: data.new_password,
+          ConfirmNewPassword: data.confirmNewPassword
         },
       );
       console.log(response);
       setOnRequest(false);
       if (err) toast.error(err);
-      // Xử lý kết quả từ server
+      toast.success("Đổi mật khẩu thành công!");
+      navigate('/');
     } catch (error) {
       toast.error(error.message);
     }

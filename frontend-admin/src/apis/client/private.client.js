@@ -7,7 +7,7 @@ const privateClient = axios.create({
   baseURL,
   paramsSerializer: {
     encode: (params) => queryString.stringify(params)
-  }
+  },
 });
 
 privateClient.interceptors.request.use(async (config) => ({
