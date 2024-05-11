@@ -23,7 +23,7 @@ export default function ProfileView() {
   const { user } = useSelector(state => state.user);
   console.log(user);
   return (
-    <Box sx={{ width: "100%" }} bgcolor="background.paper">
+    <Box sx={{ width: "100%" ,padding: '20px', borderRadius: '8px'}} bgcolor="background.paper">
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Hồ Sơ Của Tôi" {...a11yProps(0)} />

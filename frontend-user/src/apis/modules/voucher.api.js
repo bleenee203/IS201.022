@@ -4,7 +4,7 @@ import privateClient from "../client/private.client.js";
 
 const voucherEndpoint = {
   useVoucher: ({ code }) => `vouchers/get/${code}`,
-  get: "vouchers/list"
+  get: "Voucher/list"
 };
 
 const voucherApi = {

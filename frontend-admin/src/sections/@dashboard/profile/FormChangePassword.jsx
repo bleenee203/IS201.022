@@ -7,12 +7,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import { LoadingButton } from "@mui/lab";
+import authApi from "~/apis/modules/auth.api";
+import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const FormChangePassword = () => {
 
   const [isLoginRequest, setIsLoginRequest] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
-
+  const [onRequest, setOnRequest] = useState(false);
+  const navigate = useNavigate(); 
   const {
     register,
     formState: { errors, touchedFields },
@@ -22,11 +26,30 @@ const FormChangePassword = () => {
     resolver: zodResolver(ChangePasswordSchema)
   });
 
+  // const onHandleSubmit = async (data) => {
+  //   reset();
+  //   setErrorMessage("password wrong");
+  // };
   const onHandleSubmit = async (data) => {
-    reset();
-    setErrorMessage("password wrong");
+    try {
+      if (onRequest) return;
+      setOnRequest(true);
+      const { response, err } = await authApi.changePassword(
+        {
+          CurrentPassword: data.password,
+          NewPassword: data.newPassword,
+          ConfirmNewPassword: data.confirmNewPassword
+        },
+      );
+      console.log(response);
+      setOnRequest(false);
+      if (err) {toast.error(err.message);return;}
+      toast.success("Đổi mật khẩu thành công!");
+      navigate('/');
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
-
   return (
     <>
       <Box sx={{ p: 3 }} display="flex" flexDirection="column" gap={4} component="form"
@@ -72,7 +95,8 @@ const FormChangePassword = () => {
             type="submit"
             variant="contained"
             sx={{ width:"200px" }}
-            loading={isLoginRequest}
+            //loading={isLoginRequest}
+            loading={onRequest}
           >
         Lưu thay đổi
           </LoadingButton>

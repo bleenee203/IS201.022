@@ -40,7 +40,7 @@ builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>  
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
 ));
 
@@ -108,6 +108,7 @@ app.UseCors(options => options
                 .AllowAnyMethod()
                 .AllowCredentials()
             );
+
 
 app.MapControllers();
 

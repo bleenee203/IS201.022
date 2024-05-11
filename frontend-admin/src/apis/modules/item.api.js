@@ -38,6 +38,7 @@ const itemApi = {
           itemName, price, category, quantity, description, images, isInStock, isDeleted
         }
       );
+      console.log("response of add item",response)
       return { response };
     } catch (err) {
       return { err };}

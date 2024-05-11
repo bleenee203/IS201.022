@@ -91,30 +91,30 @@ const Review = ({ reviews }) => {
     setReviewCount(reviews.length);
   }, [reviews]);
 
-  const onAddReview = async () => {
-    // if (onRequest) return;
-    // setOnRequest(true);
+  // const onAddReview = async () => {
+  //   if (onRequest) return;
+  //   setOnRequest(true);
 
-    // const body = {
-    //   comicId: comic.id,
-    //   content,
-    //   comicTitle: comic?.title,
-    //   comicThumbnail: comic?.thumbnail
-    // };
+  //   const body = {
+  //     comicId: comic.id,
+  //     content,
+  //     comicTitle: comic?.title,
+  //     comicThumbnail: comic?.thumbnail
+  //   };
 
-    // const { response, err } = await reviewApi.add(body);
+  //   const { response, err } = await reviewApi.add(body);
 
-    // setOnRequest(false);
+  //   setOnRequest(false);
 
-    // if (err) toast.error(err.message);
-    // if (response) {
-    //   toast.success("Post review success");
+  //   if (err) toast.error(err.message);
+  //   if (response) {
+  //     toast.success("Post review success");
 
-    //   setFilteredReviews([...filteredReviews, response]);
-    //   setReviewCount(reviewCount + 1);
-    //   setContent("");
-    // }
-  };
+  //     setFilteredReviews([...filteredReviews, response]);
+  //     setReviewCount(reviewCount + 1);
+  //     setContent("");
+  //   }
+  // };
 
   // const onLoadMore = () => {
   //   setFilteredReviews([...filteredReviews, ...[...listReviews].splice(page * skip, skip)]);
@@ -175,7 +175,7 @@ const Review = ({ reviews }) => {
                   startIcon={<SendOutlinedIcon />}
                   loadingPosition="start"
                   loading={onRequest}
-                  onClick={onAddReview}
+                  //onClick={onAddReview}
                 >
                   Gửi
                 </LoadingButton>
