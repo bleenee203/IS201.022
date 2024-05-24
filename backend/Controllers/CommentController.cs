@@ -17,21 +17,27 @@ namespace PetShop.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "User,Admin")]
-        //[Authorize]
-        public async Task<IActionResult> Create([FromBody] CommentDto request)
+        //[Authorize(Roles = "User,Admin")]
+/*        [Authorize]
+*/        public async Task<IActionResult> Create([FromBody] CommentDto request)
         {
             
             return await _commentService.Create(request);
         }
-        [HttpPost("product-comment/{id}")]
+        /*[HttpGet("product-comment/{id}")]
         public async Task<IActionResult> GetCommentProduct([FromRoute] int id, Comment2Dto request)
         {
 
             return await _commentService.GetCommentProduct(id, request);
+        }*/
+        [HttpGet("product-comment/{id}")]
+        public async Task<IActionResult> GetCommentProduct([FromRoute] int id)
+        {
+
+            return await _commentService.GetCommentProduct(id);
         }
         [HttpGet("get-all")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
 

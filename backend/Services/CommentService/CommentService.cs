@@ -33,7 +33,7 @@ namespace PetShop.Services.CommentService
                 data = comment
             });
         }
-        public async Task<IActionResult> GetCommentProduct(int product_id, Comment2Dto request)
+        /*public async Task<IActionResult> GetCommentProduct(int product_id, Comment2Dto request)
         {
 
             var comments = await _context.Comment.Where(x => x.Product_id == product_id && x.Type == request.Type && x.IsAccept == true).ToListAsync();
@@ -59,6 +59,31 @@ namespace PetShop.Services.CommentService
 
             });
             return ResponseHelper.Ok(responselist);
+        }*/
+        public async Task<IActionResult> GetCommentProduct(int product_id)
+        {
+            var comments = await _context.Comment.Where(x => x.Product_id == product_id && x.IsAccept == true).ToListAsync();
+            if (comments is null) return ResponseHelper.NotFound();
+            List<object> responselist = new List<object>();
+            comments.ForEach(comment =>
+            {
+
+                object response = new
+                {
+                    comment.Comment_id,
+                    comment.User_id,
+                    comment.Content,
+                    comment.Product_id,
+                    comment.Type,
+                    comment.CreateAt,
+                    comment.UpdatedAt,
+                    comment.Username,
+                    comment.IsAccept
+                };
+                responselist.Add(response);
+
+            });
+            return ResponseHelper.Ok(responselist);
         }
         public async Task<IActionResult> GetAll()
         {
@@ -67,7 +92,6 @@ namespace PetShop.Services.CommentService
             List<object> responselist = new List<object>();
             comments.ForEach(comment =>
             {
-          
                 object response = new
                 {
                     comment.Comment_id,

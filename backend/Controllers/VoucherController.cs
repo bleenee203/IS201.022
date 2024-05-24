@@ -37,12 +37,16 @@ namespace PetShop.Controllers
         }
 
         [HttpGet("get/{code}")]
-        [Authorize(Roles = "User")]
+        //[Authorize]
         public async Task<IActionResult> GetCode([FromRoute] string code)
         {
             return await _voucherService.GetCode(code);
         }
-
+        [HttpGet("apply/{code}")]
+        public async Task<IActionResult> ApplyCode([FromRoute] string code)
+        {
+            return await _voucherService.ApplyCode(code);
+        }
         [HttpGet("list")]
         public async Task<IActionResult> List()
         {

@@ -14,9 +14,9 @@ namespace PetShop.Data
         public DbSet<DogItem> DogItem { get; set; }
         public DbSet<DogProductItem> DogProductItem { get; set; }
         public DbSet<DogSpecies> DogSpecies { get; set; }
-        public DbSet<Invoice> Invoice { get; set; }
+        /*public DbSet<Invoice> Invoice { get; set; }
         public DbSet<Order> Order { get; set; }
-        public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }*/
         public DbSet<ShipInfo> ShipInfo { get; set; }
         public DbSet<Checkout> Checkout {  get; set; }
         public DbSet<Voucher> Voucher { get; set; }

@@ -79,7 +79,30 @@ namespace PetShop.Services.VoucherService
         {
             var voucher = _context.Voucher.Where(x => x.IsDeleted == false).FirstOrDefault(x => x.Code == code);
             if (voucher is null || voucher.IsDeleted == true) return ResponseHelper.NotFound();
-         
+            if (voucher is null || DateTime.Parse(voucher.End_date) <= DateTime.Now) return ResponseHelper.NotFound();
+            if (voucher.Current_usage >= voucher.Max_usage) return ResponseHelper.NotFound();
+
+            await _context.SaveChangesAsync();
+            return ResponseHelper.Ok(new
+            {
+                voucher.IsDeleted,
+                voucher.Current_usage,
+                voucher.Max_usage,
+                voucher.Code,
+                voucher.Voucher_id,
+                voucher.Start_date,
+                voucher.End_date,
+                voucher.Discount_type,
+                voucher.Discount_value,
+                voucher.CreateAt,
+                voucher.UpdatedAt
+            });
+        }
+        public async Task<IActionResult> ApplyCode(string code)
+        {
+            var voucher = _context.Voucher.Where(x => x.IsDeleted == false).FirstOrDefault(x => x.Code == code);
+            if (voucher is null || voucher.IsDeleted == true) return ResponseHelper.NotFound();
+            if (voucher is null || DateTime.Parse(voucher.End_date) <= DateTime.Now) return ResponseHelper.NotFound();
             if (voucher.Current_usage >= voucher.Max_usage) return ResponseHelper.NotFound();
             voucher.Current_usage += 1;
 

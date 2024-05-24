@@ -13,7 +13,7 @@ namespace PetShop.Models
 
         public string District { get; set; }
 
-        public Order? order { get; set; }
-
+/*        public Order? order { get; set; }
+*/
     }
 }

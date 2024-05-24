@@ -34,7 +34,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("dogItemsDogItemId");
 
-                    b.ToTable("CartDetailDogItem");
+                    b.ToTable("CartDetailDogItem", (string)null);
                 });
 
             modelBuilder.Entity("CartDetailDogProductItem", b =>
@@ -49,7 +49,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("dogProductItemsDogProductItemId");
 
-                    b.ToTable("CartDetailDogProductItem");
+                    b.ToTable("CartDetailDogProductItem", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -157,7 +157,7 @@ namespace PetShop.Migrations
                         .IsUnique()
                         .HasFilter("[PhoneNumber] IS NOT NULL");
 
-                    b.ToTable("IdentityUser");
+                    b.ToTable("IdentityUser", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -388,7 +388,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("Appointment_id");
 
-                    b.ToTable("Appointment");
+                    b.ToTable("Appointment", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.Cart", b =>
@@ -401,7 +401,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("Cart");
+                    b.ToTable("Cart", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.CartDetail", b =>
@@ -428,7 +428,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.ToTable("CartDetail");
+                    b.ToTable("CartDetail", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.Checkout", b =>
@@ -482,7 +482,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Checkout");
+                    b.ToTable("Checkout", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.Comment", b =>
@@ -523,7 +523,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("Comment_id");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.DogItem", b =>
@@ -586,7 +586,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("DogSpeciesId");
 
-                    b.ToTable("DogItem");
+                    b.ToTable("DogItem", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.DogProductItem", b =>
@@ -632,7 +632,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("DogProductItemId");
 
-                    b.ToTable("DogProductItem");
+                    b.ToTable("DogProductItem", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.DogSpecies", b =>
@@ -658,7 +658,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("DogSpeciesId");
 
-                    b.ToTable("DogSpecies");
+                    b.ToTable("DogSpecies", (string)null);
 
                     b.HasData(
                         new
@@ -733,7 +733,7 @@ namespace PetShop.Migrations
                         .IsUnique()
                         .HasFilter("[OrderId] IS NOT NULL");
 
-                    b.ToTable("Invoice");
+                    b.ToTable("Invoice", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.Order", b =>
@@ -775,7 +775,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.OrderDetail", b =>
@@ -818,7 +818,7 @@ namespace PetShop.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderDetail");
+                    b.ToTable("OrderDetail", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.ShipInfo", b =>
@@ -843,7 +843,7 @@ namespace PetShop.Migrations
 
                     b.HasKey("ShipInfoId");
 
-                    b.ToTable("ShipInfo");
+                    b.ToTable("ShipInfo", (string)null);
                 });
 
             modelBuilder.Entity("PetShop.Models.Voucher", b =>
@@ -893,7 +893,7 @@ namespace PetShop.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Voucher");
+                    b.ToTable("Voucher", (string)null);
                 });
 
             modelBuilder.Entity("CartDetailDogItem", b =>

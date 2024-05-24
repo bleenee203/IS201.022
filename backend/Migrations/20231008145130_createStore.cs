@@ -305,7 +305,7 @@ namespace PetShop.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            /*migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
@@ -334,7 +334,7 @@ namespace PetShop.Migrations
                         principalTable: "ShipInfo",
                         principalColumn: "ShipInfoId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                });*/
 
             migrationBuilder.CreateTable(
                 name: "CartDetailDogProductItem",
@@ -384,7 +384,7 @@ namespace PetShop.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            /*migrationBuilder.CreateTable(
                 name: "Invoice",
                 columns: table => new
                 {
@@ -438,7 +438,7 @@ namespace PetShop.Migrations
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "OrderId");
-                });
+                });*/
 
             migrationBuilder.InsertData(
                 table: "DogSpecies",
@@ -523,7 +523,7 @@ namespace PetShop.Migrations
                 unique: true,
                 filter: "[PhoneNumber] IS NOT NULL");
 
-            migrationBuilder.CreateIndex(
+           /* migrationBuilder.CreateIndex(
                 name: "IX_Invoice_OrderId",
                 table: "Invoice",
                 column: "OrderId",
@@ -554,7 +554,7 @@ namespace PetShop.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetail_OrderId",
                 table: "OrderDetail",
-                column: "OrderId");
+                column: "OrderId");*/
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -583,11 +583,11 @@ namespace PetShop.Migrations
             migrationBuilder.DropTable(
                 name: "IdentityUser");
 
-            migrationBuilder.DropTable(
+            /*migrationBuilder.DropTable(
                 name: "Invoice");
 
             migrationBuilder.DropTable(
-                name: "OrderDetail");
+                name: "OrderDetail");*/
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -601,8 +601,8 @@ namespace PetShop.Migrations
             migrationBuilder.DropTable(
                 name: "DogProductItem");
 
-            migrationBuilder.DropTable(
-                name: "Order");
+            /*migrationBuilder.DropTable(
+                name: "Order");*/
 
             migrationBuilder.DropTable(
                 name: "Cart");
