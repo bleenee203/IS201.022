@@ -255,8 +255,7 @@ export default function AddProductModal({ open, setOpen }) {
                     fullWidth
                     onValueChange={(values) => {
                       const { floatValue } = values;
-                      // do something with floatValue
-                      setValue("price", floatValue);
+                      setValue("price", floatValue); 
                     }}
                     {
                       ...register("price")
@@ -274,6 +273,7 @@ export default function AddProductModal({ open, setOpen }) {
                     helperText={touchedFields && errors?.origin?.message}
                   />
                   <TextField label="Tháng tuổi" variant="outlined"
+                    type="number"
                     sx={{ width:"400px" }}
                     {
                       ...register("age")

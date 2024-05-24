@@ -1,7 +1,9 @@
 import { Helmet } from "react-helmet-async";
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography } from "@mui/material";
+import { Grid, Container, Typography,Button } from "@mui/material";
+import { useEffect, useState,useRef } from "react";
+import Select from 'react-select';
 // components
 // sections
 import {
@@ -11,10 +13,64 @@ import {
   AppCurrentSubject,
   AppConversionRates
 } from "../sections/@dashboard/app";
+import reportApi from "~/apis/modules/report.api";
+import { CSVLink } from "react-csv";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
 
 // ----------------------------------------------------------------------
-
 export default function DashboardAppPage() {
+  const [selectedDate, setSelectedDate] = useState(null);
+  console.log(selectedDate?.getMonth()+1);
+  const [dataToExport, setDataToExport] = useState([]);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+  const [data, setData] = useState([]);
+  const csvLinkRef = useRef();
+  useEffect(() => {
+    const get = async () => {
+      try {
+        const { response, err }= await reportApi.getAll();
+        if (err) {
+          toast.error(err);
+        }
+        if (response) {
+          setData(response.value);
+          console.log(response.value);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    get();
+  }, []);
+  const handleExportClick = async () => {
+    var month = selectedDate?.getMonth()+1;
+    var year = selectedDate?.getFullYear()
+    const {response,err} =await reportApi.getSale({month,year});
+    if (response) {
+      const modifiedData = response.value.map(sale => ({
+        'Ngày bán': format(new Date(sale.createAt), 'dd/MM/yyyy'),
+        'Danh sách sản phẩm': sale.formattedData,
+        'Tên khách hàng': sale.name,
+        'Địa chỉ khách hàng': sale.address,
+        'Số điện thoại khách hàng': sale.phoneNumber,
+        'Tổng tiền': sale.total,
+        'Tình trạng thanh toán': sale.payment
+        }));
+      setDataToExport(modifiedData);
+      setTimeout(() => {
+        csvLinkRef.current.link.click();
+      }, 100);
+      console.log(dataToExport)
+    }
+    if (err) {
+      console.log(err);
+    }
+  };
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   return (
     <>
@@ -26,22 +82,77 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Xin chào!
         </Typography>
-
+        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          views={['year', 'month']}
+          label="Chọn tháng và năm"
+          minDate={new Date('2000-01-01')}
+          maxDate={new Date('2100-12-31')}
+          value={selectedDate}
+          onChange={handleDateChange}
+          renderInput={(params) => <TextField {...params} helperText={null} />}
+        />
+      </LocalizationProvider>
+      <br />
+      <Button
+        style={{ marginBottom: "20px",marginTop: "20px" }}
+        color="warning"
+        variant="outlined"
+        onClick={handleExportClick}
+        disabled={!selectedDate}
+      > */}
+        {/* <CSVLink
+          data={dataToExport}
+          filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}.csv` : 'report.csv'}
+          target="_blank"
+          style={{ textDecoration: 'none' }} 
+        > */}
+        {/* </CSVLink> */}
+      {/* </Button> */}
+      <CSVLink
+        data={dataToExport}
+        filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}.csv` : 'report.csv'}
+        target="_blank"
+        style={{ textDecoration: 'none', display: 'none' }} // Ẩn liên kết để chỉ tải khi dữ liệu sẵn sàng
+        ref={csvLinkRef}
+      >
+        Tải xuống
+      </CSVLink>
+      {/* <Button
+        style={{ marginBottom: "20px" }}
+        color="warning"
+        variant="outlined"
+        onClick={handleExportClick}
+        disabled={!selectedDate || loading}
+      >
+        {loading ? 'Đang tải...' : 'Xuất báo cáo'}
+      </Button>
+      
+      {!loading && dataToExport.length > 0 && (
+        <CSVLink
+          data={dataToExport}
+          filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}.csv` : 'report.csv'}
+          target="_blank"
+          style={{ textDecoration: 'none' }} // Bỏ gạch chân mặc định của link
+        >
+          Tải xuống
+        </CSVLink>
+      )} */}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Sản phẩm" total={714000} icon={"openmoji:dog-face"} />
+            <AppWidgetSummary title="Sản phẩm" total={data?.products} icon={"openmoji:dog-face"} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Người dùng" total={1352831} color="info" icon={"ant-design:usergroup-add-outlined"} />
+            <AppWidgetSummary title="Người dùng" total={data?.users} color="info" icon={"ant-design:usergroup-add-outlined"} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Hóa đơn" total={1723315} color="warning" icon={"lets-icons:order-fill"} />
+            <AppWidgetSummary title="Hóa đơn" total={data?.invoices} color="warning" icon={"lets-icons:order-fill"} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Doanh thu" total={234} color="error" icon={"carbon:summary-kpi"} />
+            <AppWidgetSummary title="Doanh số" total={data?.sales} color="error" icon={"carbon:summary-kpi"} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>

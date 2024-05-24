@@ -1,6 +1,5 @@
 import { z } from "zod";
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
 export const SignInSchema = z.object({
   email: z.string().email("Yêu cầu là email. Ví dụ: example@gmail.com").min(1, "Yêu cầu là email. Ví dụ: example@gmail.com"),
   password: z.string()
@@ -28,21 +27,33 @@ export const ChangePasswordSchema = z.object({
 export const DogItemSchema = z.object({
   dogName: z.string().min(3, "Tên sản phẩm nhiều hơn 3 ký tự"),
   speciesName: z.string(),
-  price: z.coerce.number().positive(),
-  color: z.string().min(1, "Yêu cầu"),
+  price: z.coerce
+  .number({
+    required_error: "Hãy nhập giá",
+    invalid_type_error: "Hãy nhập giá",
+  })
+  .int()
+  .positive("Hãy nhập giá trị hợp lệ"),
+  color: z.string().min(1, "Hãy nhập màu sắc"),
   sex: z.enum(["male", "female"]),
-  age: z.coerce.number().positive().int().max(200, "Số tháng quá lớn"),
-  origin: z.string().min(1, "Yêu cầu"),
-  healthStatus: z.string().min(1, "Yêu cầu"),
-  description: z.string().min(1, "Yêu cầu")
+  age: z.coerce.number().positive("Tuổi phải lớn hơn 0").max(200, "Số tháng quá lớn"),
+  origin: z.string().min(1, "Hãy nhập nguồn gốc"),
+  healthStatus: z.string().min(1, "Hãy nhập tình trạng sức khỏe"),
+  description: z.string().min(1, "Hãy nhập mô tả")
 });
 
 export const ItemSchema = z.object({
   itemName: z.string().min(3, "Tên sản phẩm nhiều hơn 3 ký tự"),
-  category: z.string().min(1, "Yêu cầu"),
-  price: z.coerce.number().positive(),
-  quantity: z.coerce.number().positive().int().max(200, "Số tháng quá lớn"),
-  description: z.string().min(1, "Yêu cầu")
+  category: z.string().min(1, "Nhập loại sản phẩm"),
+  price: z.coerce
+  .number({
+    required_error: "Hãy nhập giá",
+    invalid_type_error: "Hãy nhập giá",
+  })
+  .int()
+  .positive("Hãy nhập giá trị hợp lệ"),
+  quantity: z.coerce.number().positive("Số lượng phải lớn hơn 0").int(),
+  description: z.string().min(1, "Hãy nhập mô tả")
 });
 
 export const InvoiceSchema = z.object({

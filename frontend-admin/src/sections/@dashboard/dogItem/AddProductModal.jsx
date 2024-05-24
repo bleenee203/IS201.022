@@ -218,6 +218,7 @@ export default function AddProductModal({ open, setOpen }) {
                   />
 
                   <TextField label="Số lượng" variant="outlined"
+                    type="number"
                     sx={{ width:"400px" }}
                     {
                       ...register("quantity")

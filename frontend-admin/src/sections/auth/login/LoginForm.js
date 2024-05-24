@@ -34,6 +34,7 @@ export default function LoginForm() {
     }
     if (err) {
       setErrorMessage(err.message);
+      toast.error("Đăng nhập thất  bại, kiểm tra lại thông tin đăng nhập!");
     }
   };
 
@@ -60,11 +61,11 @@ export default function LoginForm() {
           error={touchedFields && errors?.password?.message !== undefined}
           helperText={touchedFields && errors?.password?.message}
         />
-        {errorMessage && (
+        {/* {errorMessage && (
           <Box sx={{ marginTop: 2 }}>
             <Alert severity="error" variant="outlined" >{errorMessage}</Alert>
           </Box>
-        )}
+        )} */}
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>

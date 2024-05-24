@@ -101,7 +101,10 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.username.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => {
+      console.log(_user); // In ra _user ra console
+      return _user.userName.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    });
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -144,7 +147,7 @@ export default function UserPage() {
       return;
     }
     setSelected([]);
-  };
+  }; 
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -209,9 +212,9 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             Quản lý người dùng
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             Thêm người dùng
-          </Button>
+          </Button> */}
         </Stack>
 
         <Card>

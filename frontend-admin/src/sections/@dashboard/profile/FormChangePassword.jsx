@@ -4,19 +4,20 @@ import Button from "@mui/material/Button";
 import { ChangePasswordSchema } from "~/configs/zod.config";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
 import { LoadingButton } from "@mui/lab";
 import authApi from "~/apis/modules/auth.api";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
-const FormChangePassword = () => {
-
+const FormChangePassword = ({user}) => {
+  console.log("forgot",user);
   const [isLoginRequest, setIsLoginRequest] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const [onRequest, setOnRequest] = useState(false);
   const navigate = useNavigate(); 
+
   const {
     register,
     formState: { errors, touchedFields },

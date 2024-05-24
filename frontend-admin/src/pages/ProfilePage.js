@@ -4,12 +4,12 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Iconify from "~/components/iconify";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { FormChangePassword, FormProfile } from "~/sections/@dashboard/profile";
-
 function TabPanel(props) {
   const { value, index, user, ...other } = props;
+  
   return (
     <>
       <Helmet>
@@ -24,10 +24,10 @@ function TabPanel(props) {
         style={{ flex:"auto" }}
       >
         {value === 0 && (
-          <FormProfile user={user} />
+          <FormProfile user={user}  />
         )}
         {value === 1 && (
-          <FormChangePassword />
+          <FormChangePassword user={user} />
         )}
       </div>
     </>
@@ -37,7 +37,7 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired
+  value: PropTypes.number.isRequired,
 };
 
 function a11yProps(index) {
@@ -50,10 +50,11 @@ function a11yProps(index) {
 export default function ProfilePage() {
   const [value, setValue] = useState(0);
   const { user } = useSelector(state => state.user);
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  
   return (
     
     <Box
@@ -75,8 +76,8 @@ export default function ProfilePage() {
           iconPosition="start"
         />
       </Tabs>
-      <TabPanel value={value} index={0} user={user} />
-      <TabPanel value={value} index={1} />
+      <TabPanel value={value} index={0} user={user}  />
+      <TabPanel value={value} index={1} user={user} />
 
     </Box>
     

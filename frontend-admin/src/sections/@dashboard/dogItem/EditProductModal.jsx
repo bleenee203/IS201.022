@@ -266,7 +266,7 @@ export default function EditProductModal({ open, setOpen, id }) {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={2}>
-                    <NumericFormat
+                    {/* <NumericFormat
                       suffix={" đ"}
                       thousandSeparator
                       customInput={TextField}
@@ -284,8 +284,17 @@ export default function EditProductModal({ open, setOpen, id }) {
                       }
                       error={touchedFields && errors?.price?.message !== undefined}
                       helperText={touchedFields && errors?.price?.message}
-                    />
-
+                    /> */}
+                    <TextField label="Giá tiền" variant="outlined"
+                      sx={{ shrink: true }}
+                      type="number"
+                      defaultValue={data?.price}
+                      {
+                      ...register("price")
+                      }
+                      error={touchedFields && errors?.price?.message !== undefined}
+                      helperText={touchedFields && errors?.price?.message}
+                      fullWidth />
                     <TextField label="Số lượng" variant="outlined"
                       sx={{ width:"400px", shrink:true }}
                       defaultValue={+data?.quantity}

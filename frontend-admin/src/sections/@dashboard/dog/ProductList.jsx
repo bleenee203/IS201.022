@@ -355,14 +355,13 @@ export default function ProductList() {
       {
         openEditModal && <EditProductModal open={openEditModal} setOpen={setOpenEditModal} id={selectId} />
       }
-      <Button color="warning" variant="outlined">
+      <Button  style={{ margin: "20px" }} color="warning" variant="outlined">
         <CSVLink
           data={dogs}
           filename={"my-dog.csv"}
-
           target="_blank"
         >
-          Export file excel
+          Xuất file
         </CSVLink>
       </Button>
     </>
