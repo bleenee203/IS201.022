@@ -1,5 +1,7 @@
 import { filter } from "lodash";
 import { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
+
 // @mui
 import {
   Card,
@@ -19,7 +21,8 @@ import {
   TableContainer,
   TablePagination,
   Box,
-  Alert
+  Alert,
+  Button
 } from "@mui/material";
 // components
 import Label from "~/components/label";
@@ -349,13 +352,21 @@ export default function ProductList() {
           Xóa
         </MenuItem>
       </Popover>
-
       {
         openModal && <ProductModal open={openModal} setOpen={setOpenModal} id={selectId}/>
       }
       {
         openEditModal && <EditProductModal open={openEditModal} setOpen={setOpenEditModal} id={selectId} />
       }
+      <Button style={{ margin: "20px" }} color="warning" variant="outlined">
+        <CSVLink
+          data={items}
+          filename={"my-dog-item.csv"}
+          target="_blank"
+        >
+          Xuất file
+        </CSVLink>
+      </Button>
     </>
   );
 }

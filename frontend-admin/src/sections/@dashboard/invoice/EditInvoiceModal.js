@@ -58,6 +58,7 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
         }
         if (response) {
           setData(response);
+          console.log(response);
         }
       } catch (error) {
         toast.error(error);

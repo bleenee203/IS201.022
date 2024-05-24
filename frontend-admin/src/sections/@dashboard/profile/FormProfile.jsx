@@ -11,7 +11,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material
 import { toast } from "react-toastify";
 import authApi from "~/apis/modules/auth.api";
 
-const FormProfile = ({ user }) => {
+const FormProfile = ({ user  }) => {
   const [userData, setUserData] = useState(user);
   const [isLoading, setIsLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -67,6 +67,7 @@ const FormProfile = ({ user }) => {
           lastName: data.lastname,
           phoneNumber: data.phonenumber
         });
+        window.location.reload();
       }
       if (err) {
         toast.error(err.message);

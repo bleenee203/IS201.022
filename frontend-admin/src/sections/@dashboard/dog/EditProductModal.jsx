@@ -22,7 +22,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 import dogApi from "~/apis/modules/dog.api";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DogItemSchema } from "~/configs/zod.config";
 import FormLabel from "@mui/material/FormLabel";
@@ -83,7 +83,7 @@ export default function EditProductModal({ open, setOpen, id }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [radio, setRadio] = useState("");
-
+  const [defaultSpecies, setDefaultSpecies] = useState("");
   const {
     register,
     formState: { errors, touchedFields },
@@ -91,18 +91,26 @@ export default function EditProductModal({ open, setOpen, id }) {
   } = useForm({ resolver: zodResolver(DogItemSchema) });
 
   // fetch data
-  const getDog = useCallback(async() => { const { response, err } = await dogApi.getDogByIdAdmin({ id });
+  const getDog = useCallback(async () => {
+    const { response, err } = await dogApi.getDogByIdAdmin({ id });
     if (response) {
       setData(response);
     }
     if (err) {
       toast.error(err);
-    }}, [id]);
-
+    }
+  }, [id]);
   useEffect(() => {
     getDog();
   }, [getDog]);
-
+  useEffect(() => {
+    if (data?.dogSpeciesName) {
+      const defaultSpeciesName = data.dogSpeciesName;
+      const mappedCategory = categories.find(category => category.label === defaultSpeciesName);
+      setDefaultSpecies(mappedCategory);
+      setValue("speciesName", mappedCategory ? mappedCategory.label : "");
+    }
+  }, [data, setValue]);
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
     setListImg((prev) => [...prev, e.target.files[0]]);
@@ -120,7 +128,7 @@ export default function EditProductModal({ open, setOpen, id }) {
     });
   };
   const handleOnImageRemoveClick = (index) => {
-    const filter = arr.filter((i, number) => number !== index );
+    const filter = arr.filter((i, number) => number !== index);
     const filterList = listImg.filter((i, number) => number !== index);
     setArr(filter);
     setListImg(filterList);
@@ -150,8 +158,8 @@ export default function EditProductModal({ open, setOpen, id }) {
     for (const file of files) {
       formData.append("file", file);
       const response = await axios.post(api, formData, {
-        headers:{
-          "Content-Type":"multipart/form-data"
+        headers: {
+          "Content-Type": "multipart/form-data"
         }
       });
       if (response) {
@@ -172,7 +180,6 @@ export default function EditProductModal({ open, setOpen, id }) {
     setUrl(links);
   };
 
-
   const handleEdit = async (dataForm) => {
     setIsLoading(true);
     let isDeleted = false;
@@ -190,9 +197,9 @@ export default function EditProductModal({ open, setOpen, id }) {
       isDeleted = true;
       isInStock = false;
     }
-
-    const form = { ...dataForm, id, images:[...data.images, ...url], isDeleted, isInStock };
+    const form = { ...dataForm, id, images: [...data.images, ...url], isDeleted, isInStock };
     const { response, err } = await dogApi.editDogById(form);
+    console.log("dataform", dataForm)
     setIsLoading(false);
     if (response) {
       setData(response);
@@ -201,6 +208,7 @@ export default function EditProductModal({ open, setOpen, id }) {
       toast.success("Chỉnh sửa thành công!");
     }
     if (err) {
+      console.log(err);
       toast.error("Có lỗi khi chỉnh sửa!!");
     }
   };
@@ -227,15 +235,15 @@ export default function EditProductModal({ open, setOpen, id }) {
                 <div role="presentation">
                   <Breadcrumbs aria-label="breadcrumb">
                     <Typography color="inherit" fontSize={20}>
-                  Quản lý sản phẩm
+                      Quản lý sản phẩm
                     </Typography>
                     <Typography color="text.primary" fontSize={20}>Chỉnh sửa sản phẩm</Typography>
                     <Typography color="inherit" fontSize={20}>
                       ID - {id}
                     </Typography>
-                    <FormLabel sx={{ fontWeight:"bold", fontSize:"20px" }}>
-                    Tình trạng:
-                      <Label color={data?.isDeleted ? "error" : !(data?.isInStock) ? "warning" : "success"} sx={{ ml:"10px", fontSize:"16px" }}>
+                    <FormLabel sx={{ fontWeight: "bold", fontSize: "20px" }}>
+                      Tình trạng:
+                      <Label color={data?.isDeleted ? "error" : !(data?.isInStock) ? "warning" : "success"} sx={{ ml: "10px", fontSize: "16px" }}>
                         {
                           data?.isDeleted ? "Bị xóa" : "Có sẵn"
                         } / {
@@ -258,12 +266,12 @@ export default function EditProductModal({ open, setOpen, id }) {
                   gap={2}
                 >
                   <FormControl>
-                    <FormLabel sx={{ mb:"10px", fontWeight:"bold" }}>
-                    Tên sản phẩm:
+                    <FormLabel sx={{ mb: "10px", fontWeight: "bold" }}>
+                      Tên sản phẩm:
                     </FormLabel>
                     <TextField variant="outlined"
                       {
-                        ...register("dogName")
+                      ...register("dogName")
                       }
                       error={touchedFields && errors?.dogName?.message !== undefined}
                       helperText={touchedFields && errors?.dogName?.message}
@@ -277,26 +285,26 @@ export default function EditProductModal({ open, setOpen, id }) {
                       disablePortal
                       id="combo-box-demo"
                       options={categories}
-                      fullWidth sx={{ flex:2 }}
-                      defaultValue={data?.dogSpeciesName}
+                      fullWidth sx={{ flex: 2 }}
+                      value={defaultSpecies}
+                      // defaultValue={defaultSpecies}
                       renderInput={(params) => <TextField {...params} label="Giống"
                         {
-                          ...register("speciesName")
+                        ...register("speciesName")
                         }
                         error={touchedFields && errors?.speciesName?.message !== undefined}
                         helperText={touchedFields && errors?.speciesName?.message}
                       />}
                     />
-
                     <TextField label="Màu sắc" variant="outlined" defaultValue={data?.color}
-                      fullWidth sx={{ flex:2, shrink:true }}
+                      fullWidth sx={{ flex: 2, shrink: true }}
                       {
-                        ...register("color")
+                      ...register("color")
                       }
                       error={touchedFields && errors?.color?.message !== undefined}
                       helperText={touchedFields && errors?.color?.message}
                     />
-                    <FormControl fullWidth sx={{ flex:1 }}>
+                    <FormControl fullWidth sx={{ flex: 1 }}>
                       <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
@@ -304,7 +312,7 @@ export default function EditProductModal({ open, setOpen, id }) {
                         label="Giới tính"
                         defaultValue={data?.sex}
                         {
-                          ...register("sex")
+                        ...register("sex")
                         }
                         error={touchedFields && errors?.sex?.message !== undefined}
                         helperText={touchedFields && errors?.sex?.message}
@@ -316,40 +324,31 @@ export default function EditProductModal({ open, setOpen, id }) {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={2}>
-                    <NumericFormat
-                      suffix={" đ"}
-                      thousandSeparator
-                      customInput={TextField}
-                      {...materialUITextFieldProps}
-                      fullWidth
-                      sx={{ shrink:true }}
+                    <TextField label="Giá tiền" variant="outlined"
+                      sx={{ shrink: true }}
+                      type="number"
                       defaultValue={data?.price}
-                      onValueChange={(values) => {
-                        const { floatValue } = values;
-                        // do something with floatValue
-                        setValue("price", floatValue);
-                      }}
                       {
-                        ...register("price")
+                      ...register("price")
                       }
                       error={touchedFields && errors?.price?.message !== undefined}
                       helperText={touchedFields && errors?.price?.message}
-                    />
-
+                      fullWidth />
                     <TextField label="Nguồn gốc" variant="outlined"
-                      sx={{ shrink:true }}
+                      sx={{ shrink: true }}
                       defaultValue={data?.origin}
                       {
-                        ...register("origin")
+                      ...register("origin")
                       }
                       error={touchedFields && errors?.origin?.message !== undefined}
                       helperText={touchedFields && errors?.origin?.message}
-                      fullWidth/>
+                      fullWidth />
                     <TextField label="Tháng tuổi" variant="outlined"
-                      sx={{ width:"400px", shrink:true }}
+                      sx={{ width: "400px", shrink: true }}
+                      type="number"
                       defaultValue={+data?.age}
                       {
-                        ...register("age")
+                      ...register("age")
                       }
                       error={touchedFields && errors?.age?.message !== undefined}
                       helperText={touchedFields && errors?.age?.message}
@@ -359,12 +358,12 @@ export default function EditProductModal({ open, setOpen, id }) {
                   <TextField label="Tình trạng sức khỏe" variant="outlined"
                     defaultValue={data?.healthStatus}
                     {
-                      ...register("healthStatus")
+                    ...register("healthStatus")
                     }
                     error={touchedFields && errors?.healthStatus?.message !== undefined}
                     helperText={touchedFields && errors?.healthStatus?.message}
-                    sx={{ shrink:true }}
-                    fullWidth/>
+                    sx={{ shrink: true }}
+                    fullWidth />
                   <TextField
                     label="Mô tả"
                     multiline
@@ -372,11 +371,11 @@ export default function EditProductModal({ open, setOpen, id }) {
                     variant="outlined"
                     defaultValue={data?.description}
                     {
-                      ...register("description")
+                    ...register("description")
                     }
                     error={touchedFields && errors?.description?.message !== undefined}
                     helperText={touchedFields && errors?.description?.message}
-                    sx={{ shrink:true }}
+                    sx={{ shrink: true }}
                   />
                   <FormControl>
                     <FormLabel id="demo-row-radio-buttons-group-label">Tình trạng</FormLabel>
@@ -386,7 +385,6 @@ export default function EditProductModal({ open, setOpen, id }) {
                       name="row-radio-buttons-group"
                       onChange={(e) => setRadio(e.currentTarget.value)}
                       def
-
                     >
                       <FormControlLabel value="stock" control={<Radio />} label="Có sẵn / Còn hàng" />
                       <FormControlLabel value="notstock" control={<Radio />} label="Có sẵn / Hết hàng" />
@@ -398,14 +396,14 @@ export default function EditProductModal({ open, setOpen, id }) {
 
                 {/*  */}
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}
-                  sx={{ width:"200px" }}
+                  sx={{ width: "200px" }}
                 >
                   Tải hình ảnh
                   <VisuallyHiddenInput
                     type="file"
                     accept="image/png , image/jpeg, image/webp"
                     multiple
-                    onChange={handleFileUpload}/>
+                    onChange={handleFileUpload} />
                 </Button>
                 <Box display="flex" alignItems="center" justifyContent="start">
                   {
@@ -417,7 +415,7 @@ export default function EditProductModal({ open, setOpen, id }) {
                               src={item}
                               alt="image-list"
                               loading="lazy"
-                              style={{ objectFit:"cover" }}
+                              style={{ objectFit: "cover" }}
                             />
                             <Button onClick={() => handleOnImageRemoveClickData(index)}>Xóa</Button>
                           </ImageListItem>
@@ -434,7 +432,7 @@ export default function EditProductModal({ open, setOpen, id }) {
                               src={item}
                               alt="image-list"
                               loading="lazy"
-                              style={{ objectFit:"cover" }}
+                              style={{ objectFit: "cover" }}
                             />
                             <Button onClick={() => handleOnImageRemoveClick(index)}>Xóa</Button>
                           </ImageListItem>
@@ -457,8 +455,8 @@ export default function EditProductModal({ open, setOpen, id }) {
                   <LoadingButton variant="contained" loading={isLoading}
                     onClick={handleSubmit(handleEdit)}
                   >Chỉnh sửa sản phẩm</LoadingButton>
-                  <Button onClick={handleClose} variant="text" sx={{ color:"error.main" }}>
-                  Hủy
+                  <Button onClick={handleClose} variant="text" sx={{ color: "error.main" }}>
+                    Hủy
                   </Button>
                 </Box>
               </Stack>
