@@ -6,7 +6,8 @@ import { valueLabelFormat } from "../../utils/formatter.js";
 import { useSelector } from "react-redux";
 
 const ListOrder = () => {
-  const { cartItems, totalAmount } = useSelector(state => state.cart);
+  const { cartItems, totalAmount,tmpAmount,isPromote } = useSelector(state => state.cart);
+  console.log(totalAmount);
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -42,7 +43,7 @@ const ListOrder = () => {
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Tổng thanh toán" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            {valueLabelFormat(totalAmount)}
+          {isPromote===true? valueLabelFormat(tmpAmount):valueLabelFormat(totalAmount)}
           </Typography>
         </ListItem>
       </List>

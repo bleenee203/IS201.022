@@ -38,9 +38,9 @@ export const ResetPasswordSchema = z.object({
   token: z.string()
     .min(1, "Nhập token của bạn để xác nhận")
     .min(3, "Mã token phải có nhiều hơn 3 ký tự"),
-  newPassword: z
-    .string()
-    .min(3, { message: "Mật khẩu phải có nhiều hơn 3 ký tự" }),
+  newPassword: z.string()
+  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  .regex(passwordRegex, "Mật khẩu phải chứa ít nhất một chữ cái viết hoa, một số, và một ký tự đặc biệt"),
   confirmNewPassword: z
     .string()
     .min(1, { message: "Nhập lại mật khẩu" })

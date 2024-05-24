@@ -79,6 +79,7 @@ export default function ResetPage() {
     }
     if (err) {
       setErrorMessage(err.message);
+      toast.error("Thay đổi mật khẩu thất bại, kiểm tra lại thông tin!");
     }
   };
 
@@ -138,11 +139,11 @@ export default function ResetPage() {
               </LoadingButton>
             }
 
-            {errorMessage && (
+            {/* {errorMessage && (
               <Box sx={{ marginTop: 2 }}>
                 <Alert severity="error" variant="outlined" >{errorMessage}</Alert>
               </Box>
-            )}
+            )} */}
           </Box>
 
           {
@@ -197,11 +198,11 @@ export default function ResetPage() {
                   Xác nhận
               </LoadingButton>
 
-              {errorMessage && (
+              {/* {errorMessage && (
                 <Box sx={{ marginTop: 2 }}>
                   <Alert severity="error" variant="outlined" >{errorMessage}</Alert>
                 </Box>
-              )}
+              )} */}
             </Box>
           }
           <Button

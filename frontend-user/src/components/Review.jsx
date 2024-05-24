@@ -9,16 +9,17 @@ import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import HeaderContainer from "./HeaderContainer";
 import TextAvatar from "./TextAvatar";
+import reviewApi from "../apis/modules/review.api";
 
 const ReviewItem = ({ review }) => {
   const { user } = useSelector(state => state.user);
+  console.log("review",review)
 
   const [onRequest, setOnRequest] = useState(false);
 
   const onRemove = async () => {
     if (onRequest) return;
     setOnRequest(true);
-
     // const { response, err } = await reviewApi.remove({ reviewId: review.id });
     // if (err) toast.error(err.message);
     // if (response) onRemoved(review.id);
@@ -33,12 +34,12 @@ const ReviewItem = ({ review }) => {
     }}>
       <Stack direction="row" spacing={2}>
         {/* avatar */}
-        <TextAvatar text={review?.user.username} />
+        <TextAvatar text={review?.username} />
         {/* avatar */}
         <Stack spacing={2} flexGrow={1}>
           <Stack spacing={1}>
             <Typography variant="h6" fontWeight="700">
-              {review.user?.username}
+              {review?.username}
             </Typography>
             <Typography variant="caption">
               {dayjs(review.createAt).format("DD-MM-YYYY hh:mm")}
@@ -47,7 +48,7 @@ const ReviewItem = ({ review }) => {
           <Typography variant="body1" textAlign="justify">
             {review.content}
           </Typography>
-          {user && user.id === review.user.id && (
+          {user && user.id === review.user_id && (
             <LoadingButton
               variant="contained"
               startIcon={<DeleteIcon />}
@@ -72,9 +73,9 @@ const ReviewItem = ({ review }) => {
 };
 
 
-const Review = ({ reviews }) => {
+const Review = ({ reviews,product_id }) => {
   const { user } = useSelector((state) => state.user);
-
+  console.log("user",user);
   const [listReviews, setListReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [page, setPage] = useState(1);
@@ -91,30 +92,27 @@ const Review = ({ reviews }) => {
     setReviewCount(reviews.length);
   }, [reviews]);
 
-  // const onAddReview = async () => {
-  //   if (onRequest) return;
-  //   setOnRequest(true);
+  const onAddReview = async () => {
+    if (onRequest) return;
+    setOnRequest(true);
+    console.log(content)
+    const user_id = user?.id
+    const username= user?.username
+    const type=""
+    console.log("product",user_id)
+    let cmt = {user_id,product_id,content,type,username}
+    const { response, err } = await reviewApi.create(cmt);
 
-  //   const body = {
-  //     comicId: comic.id,
-  //     content,
-  //     comicTitle: comic?.title,
-  //     comicThumbnail: comic?.thumbnail
-  //   };
+    setOnRequest(false);
 
-  //   const { response, err } = await reviewApi.add(body);
-
-  //   setOnRequest(false);
-
-  //   if (err) toast.error(err.message);
-  //   if (response) {
-  //     toast.success("Post review success");
-
-  //     setFilteredReviews([...filteredReviews, response]);
-  //     setReviewCount(reviewCount + 1);
-  //     setContent("");
-  //   }
-  // };
+    if (err) console.log(err.message);
+    if (response) {
+      toast.success("Post review success");
+      setFilteredReviews([...filteredReviews, response]);
+      setReviewCount(reviewCount + 1);
+      setContent("");
+    }
+  };
 
   // const onLoadMore = () => {
   //   setFilteredReviews([...filteredReviews, ...[...listReviews].splice(page * skip, skip)]);
@@ -140,7 +138,7 @@ const Review = ({ reviews }) => {
       <HeaderContainer header={`Đánh giá (0)`}>
         <Stack spacing={4} marginBottom={2}>
           {filteredReviews.map((item) => (
-            <Box key={item.user.id}>
+            <Box key={item.user_id}>
               <ReviewItem review={item} />
               <Divider sx={{
                 display: { xs: "block", md: "none" }
@@ -161,8 +159,8 @@ const Review = ({ reviews }) => {
                   {user.name}
                 </Typography>
                 <TextField
-                  // value={content}
-                  // onChange={(e) => setContent(e.target.value)}
+                  value={content}
+                  onChange={(e) => {setContent(e.target.value)}}
                   multiline
                   rows={4}
                   placeholder="Viết đánh giá của bạn"
@@ -175,7 +173,7 @@ const Review = ({ reviews }) => {
                   startIcon={<SendOutlinedIcon />}
                   loadingPosition="start"
                   loading={onRequest}
-                  //onClick={onAddReview}
+                  onClick={onAddReview}
                 >
                   Gửi
                 </LoadingButton>

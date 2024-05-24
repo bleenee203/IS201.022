@@ -17,7 +17,7 @@ const checkoutApi = {
           user_id, data, address, total, email, payment, status, phoneNumber, name
         });
       return { response };
-    } catch (err) { return { err }; }
+    } catch (err) { console.log(err);return { err }; }
   },
   getList:  async ({
     user_id

@@ -26,7 +26,7 @@ export default function ProfileView() {
     <Box sx={{ width: "100%" ,padding: '20px', borderRadius: '8px'}} bgcolor="background.paper">
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Hồ Sơ Của Tôi" {...a11yProps(0)} />
+          <Tab label="Tài khoản Của Tôi" {...a11yProps(0)} />
           <Tab label="Thay đổi mật khẩu" {...a11yProps(1)} />
         </Tabs>
       </Box>

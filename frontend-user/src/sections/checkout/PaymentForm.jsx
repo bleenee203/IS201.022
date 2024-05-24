@@ -11,29 +11,48 @@ import Box from "@mui/material/Box";
 import { toast } from "react-toastify";
 import checkoutApi from "../../apis/modules/checkout.api";
 import { useSelector } from "react-redux";
+import voucherApi from "../../apis/modules/voucher.api";
 
 
 export default function PaymentForm() {
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const { cartItems, totalAmount, shipInfo } = useSelector(state => state.cart);
+  const { cartItems, totalAmount, shipInfo,code ,tmpAmount,isPromote} = useSelector(state => state.cart);
   const { user } = useSelector(state => state.user);
   const navigate = useNavigate();
+  const [voucher, setVoucher] = useState("");
   // goi api: checkout
-
+  const finalcost= (isPromote===true? tmpAmount:totalAmount);
+  console.log("final",finalcost);
   const payHandler = async () => {
+      const { response, err } = await voucherApi.applyVoucher({ code: code });
+      // if (err) {
+      //   toast.error("Mã voucher không hợp lệ");
+      //   return;
+      // }
+      // if (response.error) {
+      //   toast.error(response.error);
+      // }
+  
+      // if (response && response.discount_value)
+      // {
+      //   toast.success(`Áp dụng voucher thành công, giảm ${valueLabelFormat(response?.discount_value)}`);
+      // }
+
     let dataCheckout = {
       user_id: user?.id,
       email: shipInfo?.email,
       address: `${shipInfo.address}, ${shipInfo.state}, ${shipInfo.city}`,
-      total: totalAmount,
+      total: finalcost,
       payment: "Chưa thanh toán",
       status: "Đang lấy hàng",
       data: cartItems,
       phoneNumber: shipInfo?.phone,
       name: shipInfo?.firstName
     };
+    
     if (paymentMethod === "cod") {
       const { response, err } = await checkoutApi.checkoutCod(dataCheckout);
+      console.log(dataCheckout)
       if (err) {
         toast.error(err);
         return;
@@ -50,7 +69,7 @@ export default function PaymentForm() {
     }
 
     if (paymentMethod === "online-payment-vnpay") {
-      const { response, err } = await checkoutApi.vnpay({ total: totalAmount, data: cartItems });
+      const { response, err } = await checkoutApi.vnpay({ total: finalcost, data: cartItems });
       if (err) return null;
       if (response.error) {
         toast.error(response.error);
@@ -58,6 +77,7 @@ export default function PaymentForm() {
       }
       // // Chuyển hướng đến link
       window.location.href = response.data;
+      await emailApi.checkoutEmail(data);
     }
 
     // post email to backend to send email
@@ -78,7 +98,7 @@ export default function PaymentForm() {
           <Payment method={paymentMethod} onChangeMethod={changePaymentMethodHandler} />
         </Grid>
         <Grid item xs={6}>
-          <Review cartItems={cartItems} totalAmount={totalAmount} shipInfo={shipInfo} />
+          <Review cartItems={cartItems} isPromote={isPromote} tmpAmount= {tmpAmount} totalAmount={totalAmount} shipInfo={shipInfo} />
         </Grid>
 
         <Grid item xs={12}>

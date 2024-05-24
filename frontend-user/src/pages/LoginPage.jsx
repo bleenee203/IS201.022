@@ -66,6 +66,7 @@ export default function LoginPage() {
     }
     if (err) {
       setErrorMessage(err.message);
+      toast.error("Đăng nhập thất bại. Kiểm tra thông tin đăng nhập!");
     }
   };
 
@@ -149,11 +150,11 @@ export default function LoginPage() {
             >
               Quên mật khẩu
             </Button>
-            {errorMessage && (
+            {/* {errorMessage && (
               <Box sx={{ marginTop: 2 }}>
                 <Alert severity="error" variant="outlined" >{errorMessage}</Alert>
               </Box>
-            )}
+            )} */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

@@ -6,12 +6,12 @@ const emailEnpoint = {
 
 const emailApi = {
   checkoutEmail: async ({
-    address, total, email, phone, name
+    to, subject, body
   }) => {
     try {
       const response = await publicClient.post(
         emailEnpoint.checkout, {
-          address, total, email, phone, name
+          to, subject, body
         });
       return { response };
     } catch (err) { return { err }; }

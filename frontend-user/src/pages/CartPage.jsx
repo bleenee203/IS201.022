@@ -11,16 +11,17 @@ import { valueLabelFormat } from "../utils/formatter";
 import { useNavigate } from "react-router-dom";
 import voucherApi from "../apis/modules/voucher.api";
 import { toast } from "react-toastify";
-import { setTotalAmount } from "../redux/features/cartSlice";
-
+import { setTmpAmount, setTotalAmount } from "../redux/features/cartSlice";
+import { setcode } from "../redux/features/cartSlice";
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { totalAmount, cartItems } = useSelector(state => state.cart);
+  const [tmpPrice,setTmpPrice] = useState(0);
   useEffect( () => {
     dispatch(setAppState(""));
+    setTmpPrice(valueLabelFormat(totalAmount))
   }, [dispatch]);
-
   const [voucher, setVoucher] = useState("");
 
   if (cartItems.length === 0) {
@@ -56,7 +57,15 @@ const CartPage = () => {
     if (response && response.discount_value)
     {
       toast.success(`Áp dụng voucher thành công, giảm ${valueLabelFormat(response?.discount_value)}`);
-      dispatch(setTotalAmount(response.discount_value));
+      // dispatch(setTotalAmount(response.discount_value));
+      const totalprice= cartItems.reduce((total, item) => total + item.Price * item.Quantity, 0)
+      if(totalprice-response?.discount_value<0){
+        setTmpPrice(0);
+      }else{
+        setTmpPrice(valueLabelFormat(totalprice-response?.discount_value));
+      }
+      dispatch(setTmpAmount(response.discount_value));
+      dispatch(setcode(voucher));
     }
   };
 
@@ -80,7 +89,7 @@ const CartPage = () => {
               <Divider />
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Tạm tính</Typography>
-                <Typography color="primary.price">{valueLabelFormat(totalAmount)}</Typography>
+                <Typography color="primary.price"> {totalAmount === 0 ? "0" : valueLabelFormat(totalAmount)}</Typography>
               </Stack>
               <Divider/>
               <Stack direction="row" alignItems="center" gap={2}>
@@ -94,7 +103,7 @@ const CartPage = () => {
               <Divider/>
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Tổng</Typography>
-                <Typography color="primary.price">{valueLabelFormat(totalAmount)}</Typography>
+                <Typography color="primary.price">{tmpPrice}</Typography>
               </Stack>
               <Button variant="contained" fullWidth
                 onClick={() => navigate("/order")}

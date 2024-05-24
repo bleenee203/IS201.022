@@ -128,13 +128,16 @@ const ProductPage = () => {
           )}
         </Container>
         {
-          isLoading && <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        }
-        {
           data && <ProductView products={filteredUsers} />
         }
+        {
+                isLoading && (
+                  <div style={{ display: "grid", placeItems: "center", marginTop: "200px" }}>
+                    <CircularProgress size={100}/>
+                  </div>
+                )
+              }
+        
 
       </Container>
     </Helmet>
