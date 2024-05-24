@@ -58,7 +58,7 @@ const CardItem = ({ item }) => {
           </Box>
           <ButtonGroup sx={{ marginY: 1, gap:2 }}>
             <Button variant="contained" onClick={() => navigate(`${item.id}`)}>Xem chi tiết</Button>
-            <Button variant="outlined" sx={{ color:"#333" }}>Liên hệ người bán</Button>
+            {/* <Button variant="outlined" sx={{ color:"#333" }}>Liên hệ người bán</Button> */}
           </ButtonGroup>
         </Box>
       </Stack>

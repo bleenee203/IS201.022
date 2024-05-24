@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import { valueLabelFormat } from "../../utils/formatter.js";
 
 
-export default function Review({ cartItems, totalAmount, shipInfo }) {
+export default function Review({ cartItems, totalAmount, shipInfo,tmpAmount,isPromote }) {
   return (
     <>
       <Typography variant="h6" gutterBottom textTransform="uppercase">
@@ -41,7 +41,7 @@ export default function Review({ cartItems, totalAmount, shipInfo }) {
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Tổng hóa đơn" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            {(valueLabelFormat(totalAmount))}
+          {isPromote===true? valueLabelFormat(tmpAmount):valueLabelFormat(totalAmount)}
           </Typography>
         </ListItem>
       </List>

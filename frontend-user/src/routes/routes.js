@@ -17,6 +17,7 @@ import VoucherPage from "../pages/VoucherPage";
 import ProfilePetPage from "../pages/ProfilePetPage";
 import BookingPage from "../pages/BookingPage";
 import ContactPage from "../pages/ContactPage";
+import VnpayView from "../sections/payment/VnpayView";
 
 const routes = [
   {
@@ -84,6 +85,15 @@ const routes = [
     <PageWrapper>
       <ProtectedPage>
         <CheckoutPage />
+      </ProtectedPage>
+    </PageWrapper>
+  },
+  {
+    path: "/checkout/vnpaysuccess",
+    element:
+    <PageWrapper>
+      <ProtectedPage>
+        <VnpayView />
       </ProtectedPage>
     </PageWrapper>
   },

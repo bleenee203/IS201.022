@@ -3,7 +3,8 @@ import privateClient from "../client/private.client.js";
 
 
 const voucherEndpoint = {
-  useVoucher: ({ code }) => `vouchers/get/${code}`,
+  useVoucher: ({ code }) => `Voucher/get/${code}`,
+  applyVoucher: ({ code }) => `Voucher/apply/${code}`,
   get: "Voucher/list"
 };
 
@@ -12,6 +13,14 @@ const voucherApi = {
     try {
       const response = await privateClient.get(
         voucherEndpoint.useVoucher({ code })
+      );
+      return { response };
+    } catch (err) { return { err }; }
+  },
+  applyVoucher: async ({ code }) => {
+    try {
+      const response = await privateClient.get(
+        voucherEndpoint.applyVoucher({ code })
       );
       return { response };
     } catch (err) { return { err }; }

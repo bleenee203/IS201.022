@@ -12,8 +12,11 @@ const initialState = {
   //   : 0
   cartItems: [],
   totalAmount: 0,
+  tmpAmount:0,
   totalQuantity: 0,
-  shipInfo:null
+  shipInfo:null,
+  code:null,
+  isPromote:false
 };
 
 const cartSlice = createSlice({
@@ -100,21 +103,55 @@ const cartSlice = createSlice({
       state.totalQuantity = totalQuantity;
     },
     clearCart: (state) => {
-      state.cartItems = [];
-      state.totalAmount = 0;
-      state.totalQuantity = 0;
+      // state.cartItems = [];
+      // state.totalAmount = 0;
+      // state.totalQuantity = 0;
+      console.log("cart cleared!");
+      return {...initialState};
     },
     createShipInfo: (state, action) => {
       state.shipInfo = action.payload;
     },
     setTotalAmount: (state, action) => {
-      state.totalAmount = state.totalAmount - action.payload;
-    }
+      if(state.totalAmount - action.payload<0){
+        state.totalAmount=0;
+      } else {
+        state.totalAmount = state.totalAmount - action.payload;
+      }
+      console.log(state.totalAmount)
+    },
+    setcode: (state, action) => {
+      state.code = action.payload
+      console.log( "state",state.code )
+    },
+    updateItemQuantity: (state, action) => {
+      const { id, Quantity } = action.payload;
+      const item = state.cartItems?.find(
+        (item) => {
+          return item.id === id;
+        }
+      );
+      if (item) {
+        item.Quantity = Quantity;
+        state.totalAmount = state.cartItems?.reduce(
+          (total, item) => total + Number(item.Price) * Number(item.Quantity),
+          0
+        );
+      }
+    },
+    setTmpAmount: (state, action) => {
+      if(state.totalAmount - action.payload<0){
+        state.tmpAmount=0;
+      } else {
+        state.tmpAmount = state.totalAmount - action.payload;
+      }
+      state.isPromote=true;
+    },
   }
 });
 
 export const { clearCart, calculateTotal, increase, decrease, deleteItem, addItem
-  , createShipInfo, setTotalAmount
+  , createShipInfo, setTotalAmount,setcode,updateItemQuantity,setTmpAmount
 } =
   cartSlice.actions;
 

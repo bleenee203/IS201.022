@@ -224,9 +224,11 @@ const DogPage = () => {
             </Stack>
             <Box padding={5}>
               {
-                isLoading && <Box sx={{ display: "flex", marginLeft:"200px" }}>
-                  <CircularProgress size={100}/>
-                </Box>
+                isLoading && (
+                  <div style={{ display: "grid", placeItems: "center", marginTop: "200px" }}>
+                    <CircularProgress size={100}/>
+                  </div>
+                )
               }
               {
                 filteredUsers.length > 0 && <GridList data={filteredUsers} />

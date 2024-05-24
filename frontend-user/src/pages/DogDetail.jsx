@@ -25,21 +25,23 @@ import StarIcon from "@mui/icons-material/Star";
 import { convertDogSpeciesToName } from "../utils/convert.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../redux/features/cartSlice.js";
+import reviewApi from "../apis/modules/review.api.js";
 
-const reviewList = [
-  {
-    user: {
-      username: "Guest 1",
-      id: 9999
-    },
-    createAt: "2023-12-10 10:30",
-    content: "Sản phẩm này chất lượng lắm <3"
-  }
-];
+// const reviewList = [
+//   {
+//     user: {
+//       username: "Guest 1",
+//       id: 9999
+//     },
+//     createAt: "2023-12-10 10:30",
+//     content: "Sản phẩm này chất lượng lắm <3"
+//   }
+// ];
 
 const DogDetail = () => {
   const { id } = useParams();
   const [animal, setAnimal] = useState(null);
+  const [reviewList, setreviewList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector(state => state.user);
   const { cartItems } = useSelector(state => state.cart);
@@ -76,6 +78,7 @@ const DogDetail = () => {
       const { response, err } = await dogApi.getDogDetail({ id });
       if (response) {
         setAnimal(response);
+        console.log("animal",animal)
       }
       if (err) {
         toast.error(err);
@@ -86,12 +89,30 @@ const DogDetail = () => {
       setIsLoading(false);
     }
   }, [id]);
-
+  const getReview = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { response, err } = await reviewApi.getcmtprodut({ id });
+      if (response) {
+        setreviewList(response);
+        console.log(response)
+      }
+      if (err) {
+        // toast.error(err);
+        console.log(err);
+      }
+    } catch (error) {
+      // toast.error(error);
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior:"smooth" });
     getDogDetail();
-  }, [getDogDetail]);
-
+    getReview();
+  }, [getDogDetail,getReview]);
 
   return (
     <Helmet title={`${animal?.dogName}`}>
@@ -214,7 +235,7 @@ const DogDetail = () => {
         </Box>
         {/* des */}
         {/* review */}
-        <Review reviews={reviewList} />
+        <Review reviews={reviewList} product_id={animal?.dogItemId} />
         {/* review */}
         <HeaderContainer header="Có thể bạn thích" icon={<ThumbUpIcon />}>
           <RecommendSlide />

@@ -8,9 +8,13 @@ import checkoutApi from "../../apis/modules/checkout.api";
 
 function VnpayView() {
   const dispatch = useDispatch();
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
   const { user } = useSelector(state => state.user);
   const { shipInfo, totalAmount, cartItems } = useSelector(state => state.cart);
   useEffect(() => {
+    handleClearCart();
     let dataCheckout = {
       user_id: user?.id,
       email: shipInfo?.email,
@@ -24,11 +28,11 @@ function VnpayView() {
     };
     const send = async () => {
       const data = {
-        phone: shipInfo?.phone,
-        address: `${shipInfo.address}, ${shipInfo.state}, ${shipInfo.city}`,
-        total: totalAmount,
-        email: shipInfo?.email,
-        name: shipInfo?.firstName
+        to:shipInfo?.email,
+        subject:"Cảm ơn quý khách đã lựa chọn chúng tôi",
+        body: `Đơn hàng của quý khách bao gồm:\n${cartItems
+          .map((item) => `${item.Name}: ${item.Quantity} x ${item.Price}`)
+          .join("\n")}\n\nTổng giá trị đơn hàng: ${totalAmount}`
       };
       try {
         await checkoutApi.checkoutCod(dataCheckout);

@@ -66,6 +66,7 @@ export default function SignupPage() {
     }
     if (err) {
       setErrorMessage(err.message);
+      toast.success("Đăng ký tài khoản thất bại. Kiểm tra lại thông tin đăng ký!");
     }
   };
 
@@ -215,11 +216,11 @@ export default function SignupPage() {
             >
               Đăng nhập
             </Button>
-            {errorMessage && (
+            {/* {errorMessage && (
               <Box sx={{ marginTop: 2 }}>
                 <Alert severity="error" variant="outlined" >{errorMessage}</Alert>
               </Box>
-            )}
+            )} */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

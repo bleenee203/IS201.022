@@ -7,25 +7,33 @@ import emailApi from "../../apis/modules/email.api";
 
 function SuccessPage() {
   const dispatch = useDispatch();
-  const { shipInfo, totalAmount } = useSelector(state => state.cart);
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+  const { shipInfo, totalAmount,cartItems } = useSelector(state => state.cart);
+  // let body = `Đơn hàng của quý khách bao gồm:\n`;
+  // cartItems.forEach(item => {
+  //   body += `${item.Name}: ${item.Quantity} x ${item.Price}\n`;
+  // });
+  // body+=`\nTổng giá trị đơn hàng: ${totalAmount}`;
   useEffect(() => {
+    handleClearCart();
     const send = async () => {
       const data = {
-        phone: shipInfo?.phone,
-        address: `${shipInfo.address}, ${shipInfo.state}, ${shipInfo.city}`,
-        total: totalAmount,
-        email: shipInfo?.email,
-        name: shipInfo?.firstName
+        to:shipInfo?.email,
+        subject:"Cảm ơn quý khách đã lựa chọn chúng tôi",
+        body: `Đơn hàng của quý khách bao gồm:\n${cartItems
+          .map((item) => `${item.Name}: ${item.Quantity} x ${item.Price}`)
+          .join("\n")}\n\nTổng giá trị đơn hàng: ${totalAmount}`
       };
       try {
         const { response, err } = await emailApi.checkoutEmail(data);
         if (err) {
-          toast.error(err);
+          console.log(err);
           return;
         }
         if (response.status === 200) {
           toast.success(response.data);
-          dispatch(clearCart());
           return;
         }
       } catch (error) {

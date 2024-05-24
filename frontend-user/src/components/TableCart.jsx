@@ -15,9 +15,9 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ClearIcon from "@mui/icons-material/Clear";
 import QuanityInput from "./quantity/QuantityInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteItem, increase } from "../redux/features/cartSlice";
+import { deleteItem, increase, updateItemQuantity } from "../redux/features/cartSlice";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,9 +43,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 const TableCart = ({ cartItems }) => {
-  const [qty, setQty] = useState(1);
+  console.log("cart",cartItems);
+  const [qty, setQty] = useState(null);
   const dispatch = useDispatch();
   console.log(cartItems);
+  useEffect(() => {
+    const initialQty = {};
+    cartItems.forEach(item => {
+      initialQty[item.id] = item.Quantity;
+    });
+    setQty(initialQty);
+  }, [cartItems]);
+  const handleQtyChange = (id, newQty) => {
+    setQty(prevQty => ({
+      ...prevQty,
+      [id]: newQty
+    }));
+    dispatch(updateItemQuantity({ id, Quantity: newQty })); // Giả sử bạn đã định nghĩa updateItemQuantity trong cartSlice
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -85,7 +100,14 @@ const TableCart = ({ cartItems }) => {
                   <ClearIcon onClick={() => dispatch(increase({ id: item.id,type:item.type }))} />
                 </IconButton>
               </StyledTableCell> */}
-              <StyledTableCell align="center"><QuanityInput max={item?.stock || item?.Quantity} qty={item?.Quantity} setQty={setQty} /></StyledTableCell>
+              <StyledTableCell align="center">
+                {/* <QuanityInput max={item?.stock} qty={item?.Quantity} setQty={setQty} /> */}
+                <QuanityInput
+                  max={item?.stock}
+                  qty={item?.Quantity}
+                  setQty={(newQty) => handleQtyChange(item.id, newQty)}
+                />
+                </StyledTableCell>
               <StyledTableCell align="right">{valueLabelFormat(item?.Price * item?.Quantity)}</StyledTableCell>
               <StyledTableCell align="right">
                 <IconButton>
