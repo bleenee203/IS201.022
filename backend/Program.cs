@@ -11,6 +11,7 @@ using PetShop.Services.CommentService;
 using PetShop.Services.DogItemService;
 using PetShop.Services.DogProductItemService;
 using PetShop.Services.EmailService;
+using PetShop.Services.ReportService;
 using PetShop.Services.UserService;
 using PetShop.Services.VoucherService;
 
@@ -38,6 +39,8 @@ builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>

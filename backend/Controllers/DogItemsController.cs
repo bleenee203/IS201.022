@@ -79,7 +79,7 @@ namespace PetShop.Controllers
         //GET: api/DogItems/get-all-dog Lay danh sach chó danh cho admin
         [HttpGet]
         [Route("get-all-admin")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllDogItemAdmin()
         {
             return await _dogitemservice.GetAllDogItemsAdmin();
@@ -87,7 +87,7 @@ namespace PetShop.Controllers
 
         // GET: api/DogItems/get-dog/5 Lay thong tin chu cho có id = {id}
         [HttpGet("get-dog-admin/{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetDogItemAdmin([FromRoute] int id)
         {
             return await _dogitemservice.GetDogItemAdmin(id);

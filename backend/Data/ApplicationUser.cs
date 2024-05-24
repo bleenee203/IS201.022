@@ -17,6 +17,5 @@ namespace PetShop.Data
         public string? PasswordResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
 
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

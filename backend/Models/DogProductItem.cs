@@ -17,9 +17,6 @@ namespace PetShop.Models
         public bool? IsInStock { get; set; }
         public bool? IsDeleted { get; set; }
 
-
-        public ICollection<OrderDetail> orderDetails { get; set; } = new List<OrderDetail>();
-
         public ICollection<CartDetail> cartDetails { get; set; } 
 
 

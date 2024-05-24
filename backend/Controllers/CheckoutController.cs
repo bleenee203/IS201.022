@@ -19,7 +19,7 @@ namespace PetShop.Controllers
         }
 
         [HttpPost("checkout")]
-        [Authorize(Roles = "User,Admin")]
+        /*[Authorize(Roles = "User")]*/
         public async Task<IActionResult> Create([FromBody] CheckoutDto request)
         {
             return await _checkoutService.Create(request);
