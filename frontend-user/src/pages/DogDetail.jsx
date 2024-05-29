@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Helmet from "../components/Helmet";
 import { useCallback, useEffect, useState } from "react";
 import SectionBanner from "../components/SectionBanner";
@@ -61,7 +61,7 @@ const DogDetail = () => {
         return;
       }
       dispatch(addItem({
-        id: animal?.id,
+        id: animal?.dogItemId,
         Quantity: 1,
         Price: animal?.price,
         Images: animal?.images,
@@ -113,7 +113,12 @@ const DogDetail = () => {
     getDogDetail();
     getReview();
   }, [getDogDetail,getReview]);
-
+  const navigate = useNavigate();
+  const handleContactClick = () => {
+    navigate('/contact');
+  };
+  const location = useLocation();
+  const { allowReview } = location.state || {};
   return (
     <Helmet title={`${animal?.dogName}`}>
       <SectionBanner title={"Chó cảnh"} />
@@ -212,7 +217,7 @@ const DogDetail = () => {
                     onClick={addToCart}
                   >
                   Thêm vào giỏ hàng
-                  </Button> : <Button variant="contained" size="large">
+                  </Button> : <Button onClick={handleContactClick} variant="contained" size="large">
                 Liên hệ
                   </Button>
                 }
@@ -235,7 +240,7 @@ const DogDetail = () => {
         </Box>
         {/* des */}
         {/* review */}
-        <Review reviews={reviewList} product_id={animal?.dogItemId} />
+        <Review reviews={reviewList} allowReview={allowReview} product_id={animal?.dogItemId} />
         {/* review */}
         <HeaderContainer header="Có thể bạn thích" icon={<ThumbUpIcon />}>
           <RecommendSlide />

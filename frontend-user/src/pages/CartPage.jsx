@@ -18,6 +18,7 @@ const CartPage = () => {
   const navigate = useNavigate();
   const { totalAmount, cartItems } = useSelector(state => state.cart);
   const [tmpPrice,setTmpPrice] = useState(0);
+  const [discountValue,setDiscountValue] = useState(0);
   useEffect( () => {
     dispatch(setAppState(""));
     setTmpPrice(valueLabelFormat(totalAmount))
@@ -57,6 +58,7 @@ const CartPage = () => {
     if (response && response.discount_value)
     {
       toast.success(`Áp dụng voucher thành công, giảm ${valueLabelFormat(response?.discount_value)}`);
+      setDiscountValue(response.discount_value)
       // dispatch(setTotalAmount(response.discount_value));
       const totalprice= cartItems.reduce((total, item) => total + item.Price * item.Quantity, 0)
       if(totalprice-response?.discount_value<0){
@@ -101,6 +103,14 @@ const CartPage = () => {
                 >Áp dụng</Button>
               </Stack>
               <Divider/>
+              <Stack direction="row" justifyContent="space-between">
+              <Typography>Giảm giá</Typography>
+              <Typography
+        sx={{ color: discountValue == 0 ? 'text.disabled' : 'primary.main' }}
+        variant="h6"
+      >
+        {discountValue}
+      </Typography>                       </Stack>
               <Stack direction="row" justifyContent="space-between">
                 <Typography>Tổng</Typography>
                 <Typography color="primary.price">{tmpPrice}</Typography>

@@ -73,7 +73,7 @@ const ReviewItem = ({ review }) => {
 };
 
 
-const Review = ({ reviews,product_id }) => {
+const Review = ({ reviews,product_id,allowReview }) => {
   const { user } = useSelector((state) => state.user);
   console.log("user",user);
   const [listReviews, setListReviews] = useState([]);
@@ -93,6 +93,10 @@ const Review = ({ reviews,product_id }) => {
   }, [reviews]);
 
   const onAddReview = async () => {
+    if(!allowReview){
+      toast.error("Bạn chưa mua sản phẩm này!");
+      return;
+    }
     if (onRequest) return;
     setOnRequest(true);
     console.log(content)
@@ -107,7 +111,7 @@ const Review = ({ reviews,product_id }) => {
 
     if (err) console.log(err.message);
     if (response) {
-      toast.success("Post review success");
+      toast.success("Gửi bình luận thành công, chờ quản trị viên duyệt.");
       setFilteredReviews([...filteredReviews, response]);
       setReviewCount(reviewCount + 1);
       setContent("");
@@ -135,7 +139,7 @@ const Review = ({ reviews,product_id }) => {
 
   return (
     <React.Fragment>
-      <HeaderContainer header={`Đánh giá (0)`}>
+      <HeaderContainer header={`Đánh giá`}>
         <Stack spacing={4} marginBottom={2}>
           {filteredReviews.map((item) => (
             <Box key={item.user_id}>
@@ -174,6 +178,7 @@ const Review = ({ reviews,product_id }) => {
                   loadingPosition="start"
                   loading={onRequest}
                   onClick={onAddReview}
+                  disabled={!content.trim()}
                 >
                   Gửi
                 </LoadingButton>

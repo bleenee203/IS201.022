@@ -18,6 +18,7 @@ import QuanityInput from "./quantity/QuantityInput";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteItem, increase, updateItemQuantity } from "../redux/features/cartSlice";
+import { toast } from "react-toastify";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,7 +44,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 const TableCart = ({ cartItems }) => {
-  console.log("cart",cartItems);
+  console.log("cart", cartItems);
   const [qty, setQty] = useState(null);
   const dispatch = useDispatch();
   console.log(cartItems);
@@ -59,7 +60,7 @@ const TableCart = ({ cartItems }) => {
       ...prevQty,
       [id]: newQty
     }));
-    dispatch(updateItemQuantity({ id, Quantity: newQty })); // Giả sử bạn đã định nghĩa updateItemQuantity trong cartSlice
+    dispatch(updateItemQuantity({ id, Quantity: newQty }));
   };
   return (
     <TableContainer component={Paper}>
@@ -94,20 +95,16 @@ const TableCart = ({ cartItems }) => {
                 </Card>
               </StyledTableCell>
               <StyledTableCell align="right">{valueLabelFormat(item?.Price)}</StyledTableCell>
-  
-              {/* <StyledTableCell align="right">
-                <IconButton>
-                  <ClearIcon onClick={() => dispatch(increase({ id: item.id,type:item.type }))} />
-                </IconButton>
-              </StyledTableCell> */}
               <StyledTableCell align="center">
-                {/* <QuanityInput max={item?.stock} qty={item?.Quantity} setQty={setQty} /> */}
-                <QuanityInput
+                {item?.type == 'animal' ? (
+                  <Typography>{item?.Quantity}</Typography>
+                ) : <QuanityInput
                   max={item?.stock}
                   qty={item?.Quantity}
                   setQty={(newQty) => handleQtyChange(item.id, newQty)}
                 />
-                </StyledTableCell>
+                }
+              </StyledTableCell>
               <StyledTableCell align="right">{valueLabelFormat(item?.Price * item?.Quantity)}</StyledTableCell>
               <StyledTableCell align="right">
                 <IconButton>

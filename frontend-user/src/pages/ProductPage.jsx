@@ -137,8 +137,6 @@ const ProductPage = () => {
                   </div>
                 )
               }
-        
-
       </Container>
     </Helmet>
   );

@@ -12,14 +12,15 @@ function VnpayView() {
     dispatch(clearCart());
   };
   const { user } = useSelector(state => state.user);
-  const { shipInfo, totalAmount, cartItems } = useSelector(state => state.cart);
+  const { shipInfo, totalAmount, cartItems,isPromote,tmpAmount, } = useSelector(state => state.cart);
+  const finalcost= (isPromote===true? tmpAmount:totalAmount);
   useEffect(() => {
     handleClearCart();
     let dataCheckout = {
       user_id: user?.id,
       email: shipInfo?.email,
       address: `${shipInfo.address}, ${shipInfo.state}, ${shipInfo.city}`,
-      total: totalAmount,
+      total: finalcost,
       payment: "Đã thanh toán",
       status: "Đang lấy hàng",
       data: cartItems,
@@ -32,7 +33,7 @@ function VnpayView() {
         subject:"Cảm ơn quý khách đã lựa chọn chúng tôi",
         body: `Đơn hàng của quý khách bao gồm:\n${cartItems
           .map((item) => `${item.Name}: ${item.Quantity} x ${item.Price}`)
-          .join("\n")}\n\nTổng giá trị đơn hàng: ${totalAmount}`
+          .join("\n")}\n\nTổng giá trị đơn hàng: ${finalcost}`
       };
       try {
         await checkoutApi.checkoutCod(dataCheckout);

@@ -76,7 +76,7 @@ const AnimalItem = ({ item }) => {
             {valueLabelFormat(item?.price)}
           </Typography>
         </CardContent>
-        <CardActions sx={{ justifyContent:"center" }}>
+        {/* <CardActions sx={{ justifyContent:"center" }}>
           {
             item?.isInStock ? <Button
               variant="contained"
@@ -89,7 +89,7 @@ const AnimalItem = ({ item }) => {
                 Liên hệ
             </Button>
           }
-        </CardActions>
+        </CardActions> */}
       </Card>
     </Box>
   );
