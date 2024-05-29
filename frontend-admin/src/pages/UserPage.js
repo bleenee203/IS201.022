@@ -33,6 +33,7 @@ import { UserListHead, UserListToolbar } from "../sections/@dashboard/user";
 import authApi from "~/apis/modules/auth.api";
 import { toast } from "react-toastify";
 import { fDateTime } from "~/utils/formatTime";
+import EditUserModal from "~/sections/@dashboard/user/EditUserModel";
 
 // ----------------------------------------------------------------------
 
@@ -123,13 +124,17 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState("");
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [selectId, setSelectId] = useState(null);
   const [users, setUsers] = useState([]);
-
-  const handleOpenMenu = (event) => {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  // const handleOpenMenu = (event) => {
+  //   setOpen(event.currentTarget);
+  //   setSelectId(id);
+  // };
+  const handleOpenMenu = (id) => (event) => {
     setOpen(event.currentTarget);
+    setSelectId(id);
   };
-
   const handleCloseMenu = () => {
     setOpen(null);
   };
@@ -177,7 +182,7 @@ export default function UserPage() {
     setPage(0);
     setFilterName(event.target.value);
   };
-
+  
   useEffect(() => {
     const getAllUser = async () => {
       try {
@@ -264,7 +269,7 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={handleOpenMenu(id)}>
                             <Iconify icon={"eva:more-vertical-fill"} />
                           </IconButton>
                         </TableCell>
@@ -336,8 +341,8 @@ export default function UserPage() {
         }}
       >
         <MenuItem>
-          <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
-          Chỉnh sửa
+          <Iconify icon={"eva:eye-fill"} sx={{ mr: 2 }} />
+          Xem
         </MenuItem>
 
         <MenuItem sx={{ color: "error.main" }}>
@@ -345,6 +350,9 @@ export default function UserPage() {
           Xóa
         </MenuItem>
       </Popover>
+      {
+        openEditModal && <EditUserModal open={openEditModal} setOpen={setOpenEditModal} id={email} />
+      }
     </>
   );
 }

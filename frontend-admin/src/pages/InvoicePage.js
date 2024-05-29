@@ -21,6 +21,9 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  FormControl,
+  Select,
+  InputLabel,
 } from "@mui/material";
 // components
 import Label from "../components/label";
@@ -101,15 +104,17 @@ export default function InvoicePage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openModal, setOpenModal] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  console.log(selectedDate?.getMonth()+1);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [paymentStatus, setPaymentStatus] = useState('Tất cả');
+  const [deliveryStatus, setDeliveryStatus] = useState('Tất cả');
+  console.log(selectedDate?.getMonth() + 1);
   const [dataToExport, setDataToExport] = useState([]);
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   const get = async () => {
     try {
-      const { response, err }= await invoiceApi.getAll();
+      const { response, err } = await invoiceApi.getAll();
       if (err) {
         toast.error(err);
       }
@@ -187,35 +192,43 @@ export default function InvoicePage() {
   // console.log(filteredUsers)
   const csvLinkRef = useRef();
   const handleExportClick = async () => {
-    var month = selectedDate?.getMonth()+1;
+    var month = selectedDate?.getMonth() + 1;
     var year = selectedDate?.getFullYear()
-    const {response,err} =await reportApi.getSale({month,year});
+    const { response, err } = await reportApi.getSale({ month, year });
     if (response) {
+      console.log(response.value)
       let totalSum = 0;
-const modifiedData = response.value.map(sale => {
-    totalSum += sale.total || 0; // Tính tổng total
-    return {
-        'Ngày bán': sale.createAt ? format(new Date(sale.createAt), 'dd/MM/yyyy') : '',
-        'Danh sách sản phẩm': sale.formattedData || '', 
-        'Tên khách hàng': sale.name || '',
-        'Địa chỉ khách hàng': sale.address || '', 
-        'Số điện thoại khách hàng': sale.phoneNumber || '',
-        'Tình trạng thanh toán': sale.payment || '',
-        'Tổng tiền': sale.total || '0',
+      const filteredData = response.value.filter(sale =>
+        (paymentStatus != "Tất cả" ? sale.payment.toLowerCase() === paymentStatus.toLowerCase() : true)
+        &&
+      (deliveryStatus!="Tất cả" ? sale.status.toLowerCase() === deliveryStatus.toLowerCase() : true)
+      );
+      const modifiedData = filteredData?.map(sale => {
+        totalSum += sale.total || 0; // Tính tổng total
+        return {
+          'Ngày bán': sale.createAt ? format(new Date(sale.createAt), 'dd/MM/yyyy') : '',
+          'Danh sách sản phẩm': sale.formattedData || '',
+          'Tên khách hàng': sale.name || '',
+          'Địa chỉ khách hàng': sale.address || '',
+          'Số điện thoại khách hàng': sale.phoneNumber || '',
+          'Tình trạng thanh toán': sale.payment || '',
+          'Tình trạng giao hàng': sale.status || '',
+          'Tổng tiền': sale.total || '0',
 
-    };
-});
+        };
+      });                                                                                                         
 
-// Thêm thuộc tính tổng total vào đối tượng cuối cùng
-modifiedData.push({
-  'Ngày bán': 'Tổng tiền', // Nếu bạn muốn để trống cho các cột khác, hoặc thêm các giá trị mặc định khác ở đây
-  'Danh sách sản phẩm': '', 
-  'Tên khách hàng': '', 
-  'Địa chỉ khách hàng': '', 
-  'Số điện thoại khách hàng': '', 
-  'Tình trạng thanh toán': '',
-  'Tổng tiền': totalSum,
-});
+      // Thêm thuộc tính tổng total vào đối tượng cuối cùng
+      modifiedData.push({
+        'Ngày bán': 'Tổng tiền', // Nếu bạn muốn để trống cho các cột khác, hoặc thêm các giá trị mặc định khác ở đây
+        'Danh sách sản phẩm': '',
+        'Tên khách hàng': '',
+        'Địa chỉ khách hàng': '',
+        'Số điện thoại khách hàng': '',
+        'Tình trạng thanh toán': '',
+        'Tình trạng giao hàng': '',
+        'Tổng tiền': totalSum,
+      });
       setDataToExport(modifiedData);
       setTimeout(() => {
         csvLinkRef.current.link.click();
@@ -226,12 +239,18 @@ modifiedData.push({
       console.log(err);
     }
   };
+  const handlePaymentStatusChange = (event) => {
+    setPaymentStatus(event.target.value);
+  };
+  const handleDeliveryStatusChange = (event) => {
+    setDeliveryStatus(event.target.value);
+  };
   return (
     <>
       <Helmet>
         <title> Invoice | Pet Shop </title>
       </Helmet>
-      
+
       <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -242,42 +261,75 @@ modifiedData.push({
           </Button>
         </Stack>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-  <div>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        views={['year', 'month']}
-        label="Chọn tháng và năm"
-        minDate={new Date('2000-01-01')}
-        maxDate={new Date('2100-12-31')}
-        value={selectedDate}
-        onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} helperText={null} />}
-      />
-    </LocalizationProvider>
-  </div>
-  <div>
-    <Button
-      style={{ marginBottom: "20px", marginTop: "20px" }}
-      color="warning"
-      variant="outlined"
-      onClick={handleExportClick}
-      disabled={!selectedDate}
-    >
-      Xuất báo cáo
-    </Button>
-  </div>
-</div>
-      <CSVLink
-        data={dataToExport}
-        filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}.csv` : 'report.csv'}
-        target="_blank"
-        style={{ textDecoration: 'none', display: 'none' }} // Ẩn liên kết để chỉ tải khi dữ liệu sẵn sàng
-        ref={csvLinkRef}
-      >
-        Tải xuống
-      </CSVLink>
-        <Card>
+          <div>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                views={['year', 'month']}
+                label="Chọn tháng và năm"
+                minDate={new Date('2000-01-01')}
+                maxDate={new Date('2100-12-31')}
+                value={selectedDate}
+                onChange={handleDateChange}
+                renderInput={(params) => <TextField {...params} helperText={null} />}
+              />
+            </LocalizationProvider>
           
+            {/* <div style={{ marginTop: "20px", marginBottom: "20px" }}> */}
+              <FormControl variant="outlined" style={{  marginLeft: "20px",minWidth: 200 }}>
+                <InputLabel id="payment-status-label">Tình trạng thanh toán</InputLabel>
+                <Select
+                  labelId="payment-status-label"
+                  id="payment-status"
+                  value={paymentStatus}
+                  onChange={handlePaymentStatusChange}
+                  label="Tình trạng thanh toán"
+                >
+                  <MenuItem value="Tất cả">Tất cả</MenuItem>
+                  <MenuItem value="Đã thanh toán">Đã thanh toán</MenuItem>
+                  <MenuItem value="Chưa thanh toán">Chưa thanh toán</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" style={{ marginLeft: "20px",  minWidth: 200 }}>
+              <InputLabel id="delivery-status-label">Tình trạng giao hàng</InputLabel>
+              <Select
+                labelId="delivery-status-label"
+                id="delivery-status"
+                value={deliveryStatus}
+                onChange={handleDeliveryStatusChange}
+                label="Tình trạng giao hàng"
+              >
+                <MenuItem value="Tất cả">Tất cả</MenuItem>
+                <MenuItem value="Đang lấy hàng">Đang lấy hàng</MenuItem>
+                <MenuItem value="Đang giao">Đang giao</MenuItem>
+                <MenuItem value="Thành công">Thành công</MenuItem>
+              </Select>
+            </FormControl>
+            {/* </div> */}
+            <div style={{display:"flex", flexDirection: "column",marginBottom: "20px", marginTop: "20px" , alignItems: "flex-end"}}>
+            <Button
+              color="warning"
+              variant="outlined"
+              onClick={handleExportClick}
+              disabled={!selectedDate||!deliveryStatus||!paymentStatus}
+            >
+              Xuất báo cáo
+            </Button>
+            </div>
+          </div>
+        </div>
+        <CSVLink
+          data={dataToExport}
+          // filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}.csv` : 'report.csv'}
+          filename={selectedDate ? `report-${format(selectedDate, 'MM-yyyy')}-${paymentStatus}.csv` : 'report.csv'}
+
+          target="_blank"
+          style={{ textDecoration: 'none', display: 'none' }} // Ẩn liên kết để chỉ tải khi dữ liệu sẵn sàng
+          ref={csvLinkRef}
+        >
+          Tải xuống
+        </CSVLink>
+        <Card>
+
           <InvoiceListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
@@ -320,7 +372,7 @@ modifiedData.push({
                           {user_id}
                         </TableCell>
 
-                        <TableCell align="left" sx={{ textTransform:"capitalize" }}> <Label color={(payment === "chưa thanh toán" && "error") || "success"}>{sentenceCase(payment)}</Label></TableCell>
+                        <TableCell align="left" sx={{ textTransform: "capitalize" }}> <Label color={(payment === "chưa thanh toán" && "error") || "success"}>{sentenceCase(payment)}</Label></TableCell>
 
                         <TableCell align="left">{phoneNumber}</TableCell>
 

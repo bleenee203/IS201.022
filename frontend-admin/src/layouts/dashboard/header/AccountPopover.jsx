@@ -22,7 +22,7 @@ const MENU_OPTIONS = [
     path: "/"
   },
   {
-    label: "Thông tin hồ sơ",
+    label: "Tài khoản của tôi",
     icon: "eva:person-fill",
     path: "/profile"
   }

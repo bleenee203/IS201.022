@@ -15,14 +15,14 @@ const VoucherPage = () => {
       </Helmet>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Quản lý voucher
+          Quản lý mã khuyến mãi
         </Typography>
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}
             onClick={() => setOpen(true)}
           >
-            Thêm voucher
+            Thêm mã khuyến mãi
           </Button>
         </Stack>
 
