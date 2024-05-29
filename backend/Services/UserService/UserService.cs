@@ -94,6 +94,11 @@ namespace PetShop.Services.UserService
         public async Task<IActionResult> LoginAsync(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
+            var isUser = await userManager.IsInRoleAsync(user, "User");
+            if (!isUser)
+            {
+                return ResponseHelper.Unauthorized();
+            }
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 if (user.VerifiedAt is null)

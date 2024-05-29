@@ -78,7 +78,8 @@ namespace PetShop.Services.ReportService
                     sale.Address,
                     sale.PhoneNumber,
                     sale.Total,
-                    sale.Payment
+                    sale.Payment,
+                    sale.Status
 
                 };
                 responselist.Add(response);
