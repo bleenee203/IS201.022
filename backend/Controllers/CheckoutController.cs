@@ -26,8 +26,8 @@ namespace PetShop.Controllers
         }
 
         [HttpGet("list/{user_id}")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetByUser([FromRoute] string user_id)
+/*        [Authorize(Roles = "User,Admin")]
+*/        public async Task<IActionResult> GetByUser([FromRoute] string user_id)
         {
             return await _checkoutService.GetByUser(user_id);
         }
