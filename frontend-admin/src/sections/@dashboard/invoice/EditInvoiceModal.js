@@ -21,6 +21,7 @@ import Label from "~/components/label";
 import { InvoiceSchema } from "~/configs/zod.config";
 import invoiceApi from "~/apis/modules/invoice.api";
 import { valueLabelFormat } from "~/utils/formatNumber";
+import { List, ListItem, ListItemText } from "@mui/material";
 
 
 const style = {
@@ -39,8 +40,8 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
   const handleClose = () => setOpen(false);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [radio, setRadio] = useState("");
   const [radioPayment, setRadioPayment] = useState("");
+  const [radio, setRadio] = useState("");
 
 
   const {
@@ -58,7 +59,11 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
         }
         if (response) {
           setData(response);
-          console.log(response);
+          // console.log(response);
+          // console.log(data)
+          setRadio(response.status)
+          setRadioPayment(response.payment)
+          console.log(response.payment,radioPayment)
         }
       } catch (error) {
         toast.error(error);
@@ -192,17 +197,20 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
                     <FormLabel sx={{ mb:"10px", fontWeight:"bold" }}>
                       Tên sản phẩm:
                     </FormLabel>
-                    <TextField variant="outlined"
-                      disabled
-                      defaultValue={data.data?.map(obj => `${obj.id}: ${obj.name}`)?.join(", ")}
-                      fullWidth
-                    />
+                    
+                    <List>
+      {data.data?.map((obj, index) => (
+        <ListItem key={index}>
+          <ListItemText primary={`Tên sản phẩm: ${obj.name} - Số lượng: ${obj.quantity} - Giá: ${obj.price}`} />
+        </ListItem>
+      ))}
+    </List>
                     <FormLabel sx={{ mb:"10px", fontWeight:"bold" }}>
                     Tổng tiền:
                     </FormLabel>
                     <TextField variant="outlined"
                       disabled
-                      defaultValue={valueLabelFormat(data?.total)}
+                      defaultValue={data?.total===0?0:valueLabelFormat(data?.total)}
                       fullWidth
                     />
                   </FormControl>
@@ -215,12 +223,13 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
+                      value={radio}
                       onChange={(e) => setRadio(e.currentTarget.value)}
                       def
                     >
-                      <FormControlLabel value="Đang lấy hàng" control={<Radio />} label="Đang lấy hàng"/>
-                      <FormControlLabel value="Đang giao" control={<Radio />} label="Đang giao" />
-                      <FormControlLabel value="Thành công" control={<Radio />} label="Thành công" />
+                      <FormControlLabel disabled={radio === 'Thành công'} value="Đang lấy hàng" control={<Radio />} label="Đang lấy hàng"/>
+                      <FormControlLabel disabled={radio === 'Thành công'} value="Đang giao" control={<Radio />} label="Đang giao" />
+                      <FormControlLabel disabled={radio === 'Thành công'} value="Thành công" control={<Radio />} label="Thành công" />
                     </RadioGroup>
                   </FormControl>
 
@@ -229,11 +238,12 @@ export default function EditInvoiceModal({ open, setOpen, id }) {
                     </FormLabel>
                     <RadioGroup
                       row
+                      value={radioPayment}
                       onChange={(e) => setRadioPayment(e.currentTarget.value)}
                       def
                     >
-                      <FormControlLabel value="chưa thanh toán" control={<Radio />} label="Chưa thanh toán"/>
-                      <FormControlLabel value="Đã thanh toán" control={<Radio />} label="Đã thanh toán" />
+                      <FormControlLabel disabled={radioPayment === 'Đã thanh toán'} value="Chưa thanh toán" control={<Radio />} label="Chưa thanh toán"/>
+                      <FormControlLabel disabled={radioPayment === 'Đã thanh toán'} value="Đã thanh toán" control={<Radio />} label="Đã thanh toán" />
                     </RadioGroup>
                   </FormControl>
                 </Box>

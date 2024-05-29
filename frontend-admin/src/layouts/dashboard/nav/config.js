@@ -32,15 +32,15 @@ const navConfig = [
     icon: icon("ic_cart")
   },
   {
-    title: "Quản lý phiếu giảm giá",
+    title: "Quản lý mã khuyến mãi",
     icon: icon("ic_voucher"),
     path: "/voucher"
   },
-  {
-    title: "Quản lý lịch hẹn khám",
-    icon: icon("ic_booking"),
-    path: "/booking"
-  },
+  // {
+  //   title: "Quản lý lịch hẹn khám",
+  //   icon: icon("ic_booking"),
+  //   path: "/booking"
+  // },
   {
     title: "Quản lý bình luận",
     icon: icon("ic_comment"),
