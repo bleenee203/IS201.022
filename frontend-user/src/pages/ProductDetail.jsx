@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Helmet from "../components/Helmet";
 import { useCallback, useEffect, useState } from "react";
 import SectionBanner from "../components/SectionBanner";
@@ -37,6 +37,8 @@ const reviewList = [
   }
 ];
 const ProductDetail = () => {
+  const location = useLocation();
+  const { allowReview } = location.state || {};
   const { id } = useParams();
   const [animal, setAnimal] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +70,12 @@ const ProductDetail = () => {
     getDogDetail();
   }, [getDogDetail]);
   const exist = cartItems?.find(item => item.id && item.type === "product");
-  
+  const navigate = useNavigate();
+
+  const handleContactClick = () => {
+    navigate('/contact');
+  };
+
 
   // tong: 5
   // dang có: 1
@@ -204,7 +211,7 @@ const ProductDetail = () => {
                     onClick={addToCart}
                   >
                   Thêm vào giỏ hàng
-                  </Button> : <Button variant="contained" size="large">
+                  </Button> : <Button onClick={handleContactClick} variant="contained" size="large">
                 Liên hệ
                   </Button>
                 }
@@ -229,7 +236,7 @@ const ProductDetail = () => {
         </Box>
         {/* des */}
         {/* review */}
-        <Review reviews={reviewList} />
+        <Review allowReview={allowReview} reviews={reviewList} />
         {/* review */}
         <HeaderContainer header="Có thể bạn thích" icon={<ThumbUpIcon />}>
           <RecommendSlide />

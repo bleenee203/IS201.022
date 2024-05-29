@@ -8,6 +8,14 @@ import { useNavigate } from "react-router-dom";
 
 const CardItem = ({ item }) => {
   const navigate = useNavigate();
+  const handleItemClick = (item) => {
+    // Navigate to the product details page
+    if(item.type!="animal"){
+      navigate(`/product/${item.id}`, { state: { allowReview: true } });
+    }else{
+      navigate(`/dog/${item.id}`, { state: { allowReview: true } });
+    }
+  };
   return (
     <>
       <Stack marginY={1} bgcolor="#fff">
@@ -30,7 +38,7 @@ const CardItem = ({ item }) => {
           {
             (item?.data).map(item =>
             //JSON.parse(item?.data).map(item =>
-              <ListItem sx={{ gap:2 }} key={item.name}>
+              <ListItem onClick={() => handleItemClick(item)} sx={{ gap:2 }} key={item.name}>
                 <ListItemAvatar>
                   <img src={item?.images[0]} alt="img-order"
                     height="100px" width="100px" style={{ objectFit:"cover" }}
@@ -53,7 +61,7 @@ const CardItem = ({ item }) => {
           <Box display="flex" alignItems="center" gap={1}>
             <Typography>Thành tiền:</Typography>
             <Typography component="p" color="primary.price" fontWeight="bold">
-              {valueLabelFormat(item?.total)}
+              {item?.total===0?0:valueLabelFormat(item?.total)}
             </Typography>
           </Box>
           <ButtonGroup sx={{ marginY: 1, gap:2 }}>

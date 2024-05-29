@@ -22,6 +22,8 @@ export default function PaymentForm() {
   const [voucher, setVoucher] = useState("");
   // goi api: checkout
   const finalcost= (isPromote===true? tmpAmount:totalAmount);
+  console.log(totalAmount);
+  console.log(tmpAmount)
   console.log("final",finalcost);
   const payHandler = async () => {
       const { response, err } = await voucherApi.applyVoucher({ code: code });
@@ -49,7 +51,7 @@ export default function PaymentForm() {
       phoneNumber: shipInfo?.phone,
       name: shipInfo?.firstName
     };
-    
+    console.log("data",dataCheckout)
     if (paymentMethod === "cod") {
       const { response, err } = await checkoutApi.checkoutCod(dataCheckout);
       console.log(dataCheckout)

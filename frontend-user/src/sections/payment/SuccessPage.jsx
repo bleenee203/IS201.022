@@ -10,7 +10,9 @@ function SuccessPage() {
   const handleClearCart = () => {
     dispatch(clearCart());
   };
-  const { shipInfo, totalAmount,cartItems } = useSelector(state => state.cart);
+  const { shipInfo, totalAmount,cartItems,isPromote,tmpAmount } = useSelector(state => state.cart);
+  const finalcost= (isPromote===true? tmpAmount:totalAmount);
+
   // let body = `Đơn hàng của quý khách bao gồm:\n`;
   // cartItems.forEach(item => {
   //   body += `${item.Name}: ${item.Quantity} x ${item.Price}\n`;
@@ -24,7 +26,7 @@ function SuccessPage() {
         subject:"Cảm ơn quý khách đã lựa chọn chúng tôi",
         body: `Đơn hàng của quý khách bao gồm:\n${cartItems
           .map((item) => `${item.Name}: ${item.Quantity} x ${item.Price}`)
-          .join("\n")}\n\nTổng giá trị đơn hàng: ${totalAmount}`
+          .join("\n")}\n\nTổng giá trị đơn hàng: ${finalcost}`
       };
       try {
         const { response, err } = await emailApi.checkoutEmail(data);
